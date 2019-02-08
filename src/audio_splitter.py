@@ -8,8 +8,8 @@ Created on Thu Feb  7 20:41:42 2019
 from pydub import AudioSegment
 import os
 
-DATAPATH = r"..\dataset\UtahAudioData"
-OUT = r"..\dataset\segments"
+DATAPATH = "../dataset/UtahAudioData"
+OUT = "../dataset/segments"
 AUDIOMS = 30000
 
 def partition_dataset(datapath, out, ms):

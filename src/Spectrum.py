@@ -80,10 +80,12 @@ class Spectrum:
 
 
 if __name__ == "__main__":
-    DATAPATH = r"..\dataset\segments"
+    DATAPATH = "../dataset/segments"
     folders = os.listdir(DATAPATH)
     for folder in folders:
         dirpath = os.path.join(DATAPATH, str(folder))
         for track in os.listdir(dirpath):
             trackpath = os.path.join(dirpath, str(track))
-            Spectrum.get_specgram_librosa(trackpath)
+            for segment in os.listdir(trackpath):
+                segpath = os.path.join(trackpath, segment)
+                Spectrum.get_specgram_librosa(segpath)
