@@ -1,5 +1,8 @@
+import numpy as np
 from scipy.io import wavfile
 import matplotlib.pyplot as plt
+import librosa
+import librosa.display
 
 
 class Spectrum:
@@ -25,7 +28,7 @@ class Spectrum:
         return fig
 
     @staticmethod
-    def get_specgram(path, fmt="svg", NFFT=1024, noverlap=256):
+    def get_specgram_mplib(path, fmt="svg", NFFT=1024, noverlap=256):
         """
         :param path: str
             path to the .wav file to generate spectrogram
@@ -37,7 +40,7 @@ class Spectrum:
         :param noverlap: int
             The number of points of overlap between blocks
         :return: None
-            creates a .svg image into the path with the same name of input file
+            creates a image into the path with the same name of input file
             If the data has more channels, creates more svg files.
         """
         out_name = path
@@ -56,4 +59,23 @@ class Spectrum:
             fig = Spectrum.plot_spectrogram(rate, data, NFFT, noverlap);
             fig.savefig(out_name, format=fmt, frameon='false')
 
-Spectrum.get_specgram("prova.wav")
+    @staticmethod
+    def get_specgram_librosa(path, fmt='svg'):
+        """
+        :param path: str
+            path where the wav file is located
+        :param fmt: str
+            format to save the image
+        :return: None
+            creates a image into the path with the same name of input file
+        """
+        out_name = path
+        if path.endswith(".wav"):
+            out_name = path[:-4]+".svg"
+        sig, fs = librosa.load(path)
+        S = librosa.feature.melspectrogram(y=sig, sr=fs)
+        librosa.display.specshow(librosa.power_to_db(S, ref=np.max))
+        plt.savefig(out_name, format=fmt, frameon='false', bbox_inches='tight', pad_inches=0)
+
+
+Spectrum.get_specgram_librosa("..\\prova.wav")
