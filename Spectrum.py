@@ -5,29 +5,37 @@ import matplotlib.pyplot as plt
 class Spectrum:
 
     @staticmethod
-    def plot_spectrogram(rate, data):
+    def plot_spectrogram(rate, data, NFFT=1024, noverlap=256):
         """
         :param rate: int
             Sample rate of the audio file
         :param data: numpy array
             Data to plot
+        :param NFFT: int
+            The number of data points used in each block for the FFT.
+        :param noverlap: int
+         The number of points of overlap between blocks
         :return: Figure
         """
         fig, ax = plt.subplots(1)
         fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
         ax.axis('off')
-        ax.specgram(data, Fs=rate)
+        ax.specgram(data, NFFT=NFFT, noverlap=noverlap, Fs=rate)
         ax.axis('off')
         return fig
 
     @staticmethod
-    def get_specgram(path, fmt="svg"):
+    def get_specgram(path, fmt="svg", NFFT=1024, noverlap=256):
         """
         :param path: str
             path to the .wav file to generate spectrogram
         :param fmt: str
             name of the format to save the plot, default svg
             the format available are the same supported by matplotlib.pyplot.savefig
+        :param NFFT: int
+            The number of data points used in each block for the FFT.
+        :param noverlap: int
+            The number of points of overlap between blocks
         :return: None
             creates a .svg image into the path with the same name of input file
             If the data has more channels, creates more svg files.
@@ -41,9 +49,11 @@ class Spectrum:
             for i in range(0,data.ndim):
                 dimension_data = data[:,i]
                 out_path = out_name + "_channel_" + str(i) + "." + fmt
-                fig = Spectrum.plot_spectrogram(rate, dimension_data);
+                fig = Spectrum.plot_spectrogram(rate, dimension_data, NFFT, noverlap);
                 fig.savefig(out_path, format=fmt, frameon='false')
         else:
             out_name += "." + fmt
-            fig = Spectrum.plot_spectrogram(rate, data);
+            fig = Spectrum.plot_spectrogram(rate, data, NFFT, noverlap);
             fig.savefig(out_name, format=fmt, frameon='false')
+
+Spectrum.get_specgram("prova.wav")
