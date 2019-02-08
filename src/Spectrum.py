@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import librosa
 import librosa.display
 
+import os
 
 class Spectrum:
 
@@ -78,4 +79,11 @@ class Spectrum:
         plt.savefig(out_name, format=fmt, frameon='false', bbox_inches='tight', pad_inches=0)
 
 
-Spectrum.get_specgram_librosa("..\\prova.wav")
+if __name__ == "__main__":
+    DATAPATH = r"..\dataset\segments"
+    folders = os.listdir(DATAPATH)
+    for folder in folders:
+        dirpath = os.path.join(DATAPATH, str(folder))
+        for track in os.listdir(dirpath):
+            trackpath = os.path.join(dirpath, str(track))
+            Spectrum.get_specgram_librosa(trackpath)
