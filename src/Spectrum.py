@@ -82,12 +82,8 @@ class Spectrum:
         """
 
         signal, fs = librosa.load(path, sr=sample_rate)
-        print(signal.shape)
-        print(signal)
         if normalize:
             signal = librosa.util.normalize(signal)
-        print(signal.shape)
-        print(signal)
 
         spec = librosa.feature.melspectrogram(y=signal, sr=fs, n_fft=nfft, hop_length=hop_len, n_mels=n_mel_bands)
 
@@ -100,7 +96,7 @@ class Spectrum:
         return np.stack([log_spec, delta_log_spec], axis=-1)
 
     @staticmethod
-    def get_specgram_librosa(path, fmt='svg', which='both', sample_rate=2205, nfft=1024, hop_len=512, n_mel_bands=60):
+    def get_specgram_librosa(path, fmt='png', which='both', sample_rate=2205, nfft=1024, hop_len=512, n_mel_bands=60):
         """
         :param path: str
             path where the wav file is located
@@ -140,6 +136,7 @@ class Spectrum:
 
 # fft - fast fourier transform
 if __name__ == "__main__":
+    """
     DATAPATH = "../dataset/segments"
     folders = os.listdir(DATAPATH)
     for folder in folders:
@@ -149,3 +146,5 @@ if __name__ == "__main__":
             for segment in os.listdir(trackpath):
                 segpath = os.path.join(trackpath, segment)
                 Spectrum.get_specgram_librosa(segpath, 'png', 'log')
+    """
+    Spectrum.get_specgram_librosa('prova.wav', 'png')
