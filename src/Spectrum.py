@@ -61,12 +61,43 @@ class Spectrum:
             fig.savefig(out_name, format=fmt, frameon='false')
 
     @staticmethod
-    def get_specgram_librosa(path, fmt='svg', sample_rate=2205, nfft=1024, hop_len=512, n_mel_bands=60):
+    def compute_specgram_and_delta(path, sample_rate=2205, nfft=1024, hop_len=512, n_mel_bands=60):
+        """
+        :param path: str
+            path where the wav file is located
+        :param sample_rate: int
+            sample rate to re-sample the wav.
+            default is set to audible frequencies
+        :param nfft: int
+            The number of data points used in each block for the FFT.
+        :param hop_len: int
+            The number of points of overlap between blocks
+        :param n_mel_bands: int
+            number of Mel bands to generate
+        :return: np.array
+            log-scale mel spectrogram stacked with its delta
+        """
+
+        signal, fs = librosa.load(path, sr=sample_rate)
+        spec = librosa.feature.melspectrogram(y=signal, sr=fs, n_fft=nfft, hop_length=hop_len, n_mels=n_mel_bands)
+
+        # generating first channel, log-scaled mel spectrogram (default parameters match the ones used in the paper)
+        log_spec = librosa.power_to_db(spec, ref=np.max)
+
+        # delta computation, second channel
+        delta_log_spec = librosa.feature.delta(log_spec)
+
+        return np.stack([log_spec, delta_log_spec], axis=-1)
+
+    @staticmethod
+    def get_specgram_librosa(path, fmt='svg', which='both', sample_rate=2205, nfft=1024, hop_len=512, n_mel_bands=60):
         """
         :param path: str
             path where the wav file is located
         :param fmt: str
             format to save the image
+        :param which: str {log, delta, both}
+            which spectrogram to save
         :param sample_rate:
             sample rate to re-sample the wav.
             default is set to audible frequencies
@@ -77,20 +108,25 @@ class Spectrum:
         :param n_mel_bands:
             number of Mel bands to generate
         :return: None
-            creates a image into the path with the same name of input file
+            creates two images into the path with the same name of input file
         """
         out_name = path
         if path.endswith(".wav"):
-            out_name = path[:-4]+"."+ fmt
-        sig, fs = librosa.load(path, sr=sample_rate)
-        # missing signal normalization
-        # generating first channel, log-scaled mel spectrogram (default parameters are the one used in the paper)
-        S = librosa.feature.melspectrogram(y=sig, sr=fs, n_fft=nfft, hop_length=hop_len, n_mels=n_mel_bands)
-        librosa.display.specshow(librosa.power_to_db(S, ref=np.max))
+            out_name = path[:-4]
 
-        # delta computation (librosa.feature.delta)
+        spec = Spectrum.compute_specgram_and_delta(path, sample_rate, nfft, hop_len, n_mel_bands)
+        log_spec = spec[:, :, 0]
+        delta_spec = spec[:, :, 1]
 
-        plt.savefig(out_name, format=fmt, frameon='false', bbox_inches='tight', pad_inches=0)
+        if which != 'delta':
+            librosa.display.specshow(log_spec)
+            out_path = out_name + '.' + fmt
+            plt.savefig(out_path, format=fmt, frameon='false', bbox_inches='tight', pad_inches=0)
+
+        if which != 'log':
+            librosa.display.specshow(delta_spec)
+            out_path = out_name + '_delta.' + fmt
+            plt.savefig(out_path, format=fmt, frameon='false', bbox_inches='tight', pad_inches=0)
 
 
 if __name__ == "__main__":
@@ -102,4 +138,4 @@ if __name__ == "__main__":
             trackpath = os.path.join(dirpath, str(track))
             for segment in os.listdir(trackpath):
                 segpath = os.path.join(trackpath, segment)
-                Spectrum.get_specgram_librosa(segpath, 'png')
+                Spectrum.get_specgram_librosa(segpath, 'png', 'log')
