@@ -21,7 +21,7 @@ def partition_dataset(datapath, out, ms):
             trackpath = os.path.join(dirpath, str(track))
             audio = AudioSegment.from_file(trackpath)
             
-            segments = [audio[i:i+ms] for i in range(0, len(audio), ms)]
+            segments = [audio[(i*ms):((i+1)*ms)] for i in range(0, len(audio)//ms)]
             
             outpath = os.path.join(out, str(cat), str(track.split(".")[0]))
             

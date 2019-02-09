@@ -134,9 +134,9 @@ class Spectrum:
             out_path = out_name + '_delta.' + fmt
             plt.savefig(out_path, format=fmt, frameon='false', bbox_inches='tight', pad_inches=0)
 
+
 # fft - fast fourier transform
 if __name__ == "__main__":
-    """
     DATAPATH = "../dataset/segments"
     folders = os.listdir(DATAPATH)
     for folder in folders:
@@ -145,6 +145,4 @@ if __name__ == "__main__":
             trackpath = os.path.join(dirpath, str(track))
             for segment in os.listdir(trackpath):
                 segpath = os.path.join(trackpath, segment)
-                Spectrum.get_specgram_librosa(segpath, 'png', 'log')
-    """
-    Spectrum.get_specgram_librosa('prova.wav', 'png')
+                Spectrum.get_specgram_librosa(segpath, 'png', 'both')
