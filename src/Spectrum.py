@@ -29,7 +29,7 @@ class Spectrum:
         return fig
 
     @staticmethod
-    def get_specgram_mplib(path, fmt="svg", NFFT=1024, noverlap=256):
+    def get_specgram_mplib(path, fmt="svg", NFFT=1024, noverlap=512):
         """
         :param path: str
             path to the .wav file to generate spectrogram
@@ -50,7 +50,7 @@ class Spectrum:
         rate, data = wavfile.read(path)
         if data.ndim > 1:
             # we have more than one channel, we have to do more plots
-            for i in range(0,data.ndim):
+            for i in range(0, data.ndim):
                 dimension_data = data[:,i]
                 out_path = out_name + "_channel_" + str(i) + "." + fmt
                 fig = Spectrum.plot_spectrogram(rate, dimension_data, NFFT, noverlap);
@@ -61,21 +61,35 @@ class Spectrum:
             fig.savefig(out_name, format=fmt, frameon='false')
 
     @staticmethod
-    def get_specgram_librosa(path, fmt='svg'):
+    def get_specgram_librosa(path, fmt='svg', sample_rate=2205, nfft=1024, hop_len=512, n_mel_bands=60):
         """
         :param path: str
             path where the wav file is located
         :param fmt: str
             format to save the image
+        :param sample_rate:
+            sample rate to re-sample the wav.
+            default is set to audible frequencies
+        :param nfft: int
+            The number of data points used in each block for the FFT.
+        :param hop_len: int
+            The number of points of overlap between blocks
+        :param n_mel_bands:
+            number of Mel bands to generate
         :return: None
             creates a image into the path with the same name of input file
         """
         out_name = path
         if path.endswith(".wav"):
-            out_name = path[:-4]+".svg"
-        sig, fs = librosa.load(path)
-        S = librosa.feature.melspectrogram(y=sig, sr=fs)
+            out_name = path[:-4]+"."+ fmt
+        sig, fs = librosa.load(path, sr=sample_rate)
+        # missing signal normalization
+        # generating first channel, log-scaled mel spectrogram (default parameters are the one used in the paper)
+        S = librosa.feature.melspectrogram(y=sig, sr=fs, n_fft=nfft, hop_length=hop_len, n_mels=n_mel_bands)
         librosa.display.specshow(librosa.power_to_db(S, ref=np.max))
+
+        # delta computation (librosa.feature.delta)
+
         plt.savefig(out_name, format=fmt, frameon='false', bbox_inches='tight', pad_inches=0)
 
 
@@ -88,4 +102,4 @@ if __name__ == "__main__":
             trackpath = os.path.join(dirpath, str(track))
             for segment in os.listdir(trackpath):
                 segpath = os.path.join(trackpath, segment)
-                Spectrum.get_specgram_librosa(segpath)
+                Spectrum.get_specgram_librosa(segpath, 'png')
