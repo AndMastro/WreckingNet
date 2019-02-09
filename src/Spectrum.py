@@ -6,6 +6,7 @@ import librosa.display
 
 import os
 
+
 class Spectrum:
 
     @staticmethod
@@ -61,10 +62,12 @@ class Spectrum:
             fig.savefig(out_name, format=fmt, frameon='false')
 
     @staticmethod
-    def compute_specgram_and_delta(path, sample_rate=2205, nfft=1024, hop_len=512, n_mel_bands=60):
+    def compute_specgram_and_delta(path, sample_rate=2205, normalize=True, nfft=1024, hop_len=512, n_mel_bands=60):
         """
         :param path: str
             path where the wav file is located
+        :param normalize: bool
+            Normalize the data before computing the spectogram
         :param sample_rate: int
             sample rate to re-sample the wav.
             default is set to audible frequencies
@@ -79,6 +82,13 @@ class Spectrum:
         """
 
         signal, fs = librosa.load(path, sr=sample_rate)
+        print(signal.shape)
+        print(signal)
+        if normalize:
+            signal = librosa.util.normalize(signal)
+        print(signal.shape)
+        print(signal)
+
         spec = librosa.feature.melspectrogram(y=signal, sr=fs, n_fft=nfft, hop_length=hop_len, n_mels=n_mel_bands)
 
         # generating first channel, log-scaled mel spectrogram (default parameters match the ones used in the paper)
@@ -128,7 +138,7 @@ class Spectrum:
             out_path = out_name + '_delta.' + fmt
             plt.savefig(out_path, format=fmt, frameon='false', bbox_inches='tight', pad_inches=0)
 
-
+# fft - fast fourier transform
 if __name__ == "__main__":
     DATAPATH = "../dataset/segments"
     folders = os.listdir(DATAPATH)
