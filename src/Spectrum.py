@@ -136,13 +136,15 @@ class Spectrum:
 
 
 # fft - fast fourier transform
-if __name__ == "__main__":
-    DATAPATH = "../dataset/segments"
-    folders = os.listdir(DATAPATH)
-    for folder in folders:
-        dirpath = os.path.join(DATAPATH, str(folder))
-        for track in os.listdir(dirpath):
-            trackpath = os.path.join(dirpath, str(track))
-            for segment in os.listdir(trackpath):
-                segpath = os.path.join(trackpath, segment)
-                Spectrum.get_specgram_librosa(segpath, 'png', 'both')
+# =============================================================================
+# if __name__ == "__main__":
+#     DATAPATH = "../dataset/segments"
+#     folders = os.listdir(DATAPATH)
+#     for folder in folders:
+#         dirpath = os.path.join(DATAPATH, str(folder))
+#         for track in os.listdir(dirpath):
+#             trackpath = os.path.join(dirpath, str(track))
+#             for segment in os.listdir(trackpath):
+#                 segpath = os.path.join(trackpath, segment)
+#                 Spectrum.get_specgram_librosa(segpath, 'png', 'both')
+# =============================================================================
