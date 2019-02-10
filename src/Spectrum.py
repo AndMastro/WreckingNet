@@ -62,7 +62,7 @@ class Spectrum:
             fig.savefig(out_name, format=fmt, frameon='false')
 
     @staticmethod
-    def compute_specgram_and_delta(path, sample_rate=2205, normalize=True, nfft=1024, hop_len=512, n_mel_bands=60):
+    def compute_specgram_and_delta(path, sample_rate=2205, normalize=True, nfft=1024, hop_len=512, n_mel_bands=128):
         """
         :param path: str
             path where the wav file is located
@@ -96,7 +96,7 @@ class Spectrum:
         return np.stack([log_spec, delta_log_spec], axis=-1)
 
     @staticmethod
-    def get_specgram_librosa(path, fmt='png', which='both', sample_rate=2205, nfft=1024, hop_len=512, n_mel_bands=60):
+    def get_specgram_librosa(path, fmt='png', which='both', sample_rate=2205, nfft=1024, hop_len=512, n_mel_bands=128):
         """
         :param path: str
             path where the wav file is located
