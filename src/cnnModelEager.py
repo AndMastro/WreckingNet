@@ -83,13 +83,13 @@ Xtrain = np.asarray(Xtrain, dtype=np.float32)
 ytrain = np.asarray(ytrain, dtype=np.float32)
 Xtest = np.asarray(Xtest, dtype=np.float32)
 ytest = np.asarray(ytest, dtype=np.float32)
-print(Xtrain)
+#print(Xtrain)
 
 Xtrain = tf.convert_to_tensor(Xtrain, dtype=tf.float32)
 ytrain = tf.convert_to_tensor(ytrain, dtype=tf.float32)
 Xtest = tf.convert_to_tensor(Xtest, dtype=tf.float32)
 ytest = tf.convert_to_tensor(ytest, dtype=tf.float32)
-print(Xtrain.shape)
+#print(Xtrain.shape)
 # Example of tf.data
 train_it = tf.data.Dataset.from_tensor_slices((Xtrain, ytrain))
 test_it = tf.data.Dataset.from_tensor_slices((Xtest, ytest))
@@ -104,8 +104,8 @@ import matplotlib.pyplot as plt
 #plt.show()
 
 # Check shape and label
-print(xb.shape)
-print(yb)
+#print(xb.shape)
+#print(yb)
 
 # Definitely not the most efficient way!
 def _parse_example(x, y):
@@ -121,32 +121,6 @@ test_it = test_it.map(_parse_example)
 
 # Architecture is taken from here: https://www.tensorflow.org/tutorials/estimators/cnn#building_the_cnn_mnist_classifier
 
-class CNN(tf.keras.Model):
-  
-  def __init__(self):
-    super(CNN, self).__init__()
-    
-    self.conv1 = tf.layers.Conv2D(filters=32, kernel_size=[5, 5], padding="same", activation=tf.nn.relu)
-    self.pool1 = tf.layers.MaxPooling2D(pool_size=[2, 2], strides=2)
-    
-    
-    self.conv2 = tf.layers.Conv2D(filters=64, kernel_size=[5, 5], padding="same", activation=tf.nn.relu)
-    self.pool2 = tf.layers.MaxPooling2D(pool_size=[2, 2], strides=2)
-
-
-    self.dense = tf.layers.Dense(1024, activation=tf.nn.relu)
-    self.dropout = tf.layers.Dropout(0.4)
-    
-    self.logits = tf.layers.Dense(units=10)
-    
-  def call(self, x, training=False):
-    
-    x = self.pool1(self.conv1(x))
-    x = self.pool2(self.conv2(x))
-    x = self.dense(tf.reshape(x, (-1, 7 * 7 * 64)))
-    x = self.dropout(x, training=training)
-    return self.logits(x)
-
 #same model of the paper
 class SpectroCNN(tf.keras.Model):
   
@@ -159,10 +133,10 @@ class SpectroCNN(tf.keras.Model):
     self.conv4 = tf.layers.Conv2D(filters=48, kernel_size=[5, 5], strides = (2,2), padding="same", activation=tf.nn.relu)
     self.conv5 = tf.layers.Conv2D(filters=64, kernel_size=[4, 4], strides = (2,2), padding="same", activation=tf.nn.relu)
 
-    self.dense = tf.layers.Dense(200, activation=tf.nn.softmax)
+    self.dense = tf.layers.Dense(200, activation=tf.nn.relu)
     self.dropout = tf.layers.Dropout(0.5) #to be improved
     
-    self.logits = tf.layers.Dense(units=4)
+    self.logits = tf.layers.Dense(units=4, activation = tf.nn.softmax)
     
   def call(self, x, training=False):
     
@@ -175,7 +149,7 @@ class SpectroCNN(tf.keras.Model):
     x = self.dense(tf.reshape(x, (-1, 189504)))
     x = self.dropout(x, training=training)
 
-    return self.logits(x)
+    return (self.logits(x))
 
 # Initialize
 #cnn = CNN()
@@ -202,19 +176,35 @@ for epoch in range(epochs):
     #print(xb,yb)
     ypred = cnn(xb)
     accTrain(predictions=ypred, labels=yb)
+    print("predicted label train:")
+    print(ypred)
+    print("Real label train:")
+    print(yb)
     lossValue = tf.losses.sparse_softmax_cross_entropy(yb, ypred)
+    #trainConfMatrix = tf.confusion_matrix(labels = yb, predictions = ypred)
 
   accTest = tfe.metrics.SparseAccuracy()
   for xb, yb in test_it.batch(16):
     #print(xb,yb)
     ypred = cnn(xb)
     accTest(predictions=ypred, labels=yb)
+    print("predicted label test:")
+    print(ypred)
+    print("Real label test:")
+    print(yb)
+    print(ypred)
+    print(yb)
+    #testConfMatrix = tf.confusion_matrix(labels = yb, predictions = ypred)
     
   trainAccuracy[epoch] = accTrain.result().numpy()
   testAccuracy[epoch] = accTest.result().numpy()
   print('Train accuracy at epoch {} is {} %'.format(epoch, trainAccuracy[epoch] * 100))
   print('Test accuracy at epoch {} is {} %'.format(epoch, testAccuracy[epoch] * 100))
   print('Loss value at epoch {} is {}'.format(epoch, lossValue))
+  print("Confusion matrix on training:")
+  #print(trainConfMatrix)
+  print("Confusion matrix on test:")
+  #print(testConfMatrix)
   
   for xb, yb in train_it.shuffle(1000).batch(16):
     opt.minimize(lambda: loss(cnn, xb, yb))
