@@ -149,7 +149,7 @@ class SpectroCNN(tf.keras.Model):
     x = self.dense(tf.reshape(x, (-1, 189504)))
     x = self.dropout(x, training=training)
 
-    return (self.logits(x))
+    return self.logits(x)
 
 # Initialize
 #cnn = CNN()
