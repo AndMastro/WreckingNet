@@ -159,10 +159,10 @@ class SpectroCNN(tf.keras.Model):
     self.conv4 = tf.layers.Conv2D(filters=48, kernel_size=[5, 5], strides = (2,2), padding="same", activation=tf.nn.relu)
     self.conv5 = tf.layers.Conv2D(filters=64, kernel_size=[4, 4], strides = (2,2), padding="same", activation=tf.nn.relu)
 
-    self.dense = tf.layers.Dense(1024, activation=tf.nn.relu)
+    self.dense = tf.layers.Dense(200, activation=tf.nn.softmax)
     self.dropout = tf.layers.Dropout(0.5) #to be improved
     
-    self.logits = tf.layers.Dense(units=10)
+    self.logits = tf.layers.Dense(units=4)
     
   def call(self, x, training=False):
     
@@ -191,20 +191,33 @@ def loss(net, x, y):
 opt = tf.train.AdamOptimizer()
 epochs = 10
 
-all_acc = np.zeros(epochs)
+trainAccuracy = np.zeros(epochs)
+testAccuracy = np.zeros(epochs)
+lossValue = 0.0
 
 for epoch in range(epochs):
   
-  acc = tfe.metrics.SparseAccuracy()
+  accTrain = tfe.metrics.SparseAccuracy()
   for xb, yb in train_it.batch(32):
     #print(xb,yb)
     ypred = cnn(xb)
-    acc(predictions=ypred, labels=yb)
+    accTrain(predictions=ypred, labels=yb)
+    lossValue = tf.losses.sparse_softmax_cross_entropy(yb, ypred)
+
+  accTest = tfe.metrics.SparseAccuracy()
+  for xb, yb in test_it.batch(32):
+    #print(xb,yb)
+    ypred = cnn(xb)
+    accTest(predictions=ypred, labels=yb)
     
-  all_acc[epoch] = acc.result().numpy()
-  print('Test accuracy at epoch {} is {} %'.format(epoch, all_acc[epoch] * 100))
+  trainAccuracy[epoch] = accTrain.result().numpy()
+  testAccuracy[epoch] = accTest.result().numpy()
+  print('Train accuracy at epoch {} is {} %'.format(epoch, trainAccuracy[epoch] * 100))
+  print('Test accuracy at epoch {} is {} %'.format(epoch, testAccuracy[epoch] * 100))
+  print('Loss value at epoch {} is {}'.format(epoch, lossValue))
   
   for xb, yb in train_it.shuffle(1000).batch(32):
     opt.minimize(lambda: loss(cnn, xb, yb))
 
-plt.plot(all_acc)
+plt.plot(trainAccuracy)
+plt.plot(testAccuracy)
