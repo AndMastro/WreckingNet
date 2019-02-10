@@ -22,7 +22,7 @@ import numpy as np
 
 imageArray = []
 labels = []
-images = glob.glob('../dataset/UtahAudioData/SpectogramImages/4classes/concrete_mixer/*.png')
+images = glob.glob('../dataset/UtahAudioData/SpectogramImages/4ClassesDerivate/concrete_mixer/*.png')
 
 for image in images:
     with open(image, 'rb') as file:
@@ -31,7 +31,7 @@ for image in images:
         imageArray.append(img)
         labels.append(0.0)
 
-images = glob.glob('../dataset/UtahAudioData/SpectogramImages/4classes/dozer_JD700J/*.png')
+images = glob.glob('../dataset/UtahAudioData/SpectogramImages/4ClassesDerivate/dozer_JD700J/*.png')
 for image in images:
     with open(image, 'rb') as file:
         img = Image.open(file)
@@ -39,7 +39,7 @@ for image in images:
         imageArray.append(img)
         labels.append(1.0)
 
-images = glob.glob('../dataset/UtahAudioData/SpectogramImages/4classes/excavator_JD50G/*.png')
+images = glob.glob('../dataset/UtahAudioData/SpectogramImages/4ClassesDerivate/excavator_JD50G/*.png')
 for image in images:
     with open(image, 'rb') as file:
         img = Image.open(file)
@@ -47,7 +47,7 @@ for image in images:
         imageArray.append(img)
         labels.append(2.0)
 
-images = glob.glob('../dataset/UtahAudioData/SpectogramImages/4classes/grader_JD670G/*.png')
+images = glob.glob('../dataset/UtahAudioData/SpectogramImages/4ClassesDerivate/grader_JD670G/*.png')
 for image in images:
     with open(image, 'rb') as file:
         img = Image.open(file)
@@ -172,7 +172,7 @@ class SpectroCNN(tf.keras.Model):
     x = self.conv4(x)
     x = self.conv5(x)
 
-    x = self.dense(tf.reshape(x, (-1, 77056)))
+    x = self.dense(tf.reshape(x, (-1, 189504)))
     x = self.dropout(x, training=training)
 
     return self.logits(x)
@@ -198,14 +198,14 @@ lossValue = 0.0
 for epoch in range(epochs):
   
   accTrain = tfe.metrics.SparseAccuracy()
-  for xb, yb in train_it.batch(32):
+  for xb, yb in train_it.batch(16):
     #print(xb,yb)
     ypred = cnn(xb)
     accTrain(predictions=ypred, labels=yb)
     lossValue = tf.losses.sparse_softmax_cross_entropy(yb, ypred)
 
   accTest = tfe.metrics.SparseAccuracy()
-  for xb, yb in test_it.batch(32):
+  for xb, yb in test_it.batch(16):
     #print(xb,yb)
     ypred = cnn(xb)
     accTest(predictions=ypred, labels=yb)
@@ -216,7 +216,7 @@ for epoch in range(epochs):
   print('Test accuracy at epoch {} is {} %'.format(epoch, testAccuracy[epoch] * 100))
   print('Loss value at epoch {} is {}'.format(epoch, lossValue))
   
-  for xb, yb in train_it.shuffle(1000).batch(32):
+  for xb, yb in train_it.shuffle(1000).batch(16):
     opt.minimize(lambda: loss(cnn, xb, yb))
 
 plt.plot(trainAccuracy)
