@@ -22,7 +22,7 @@ import numpy as np
 
 imageArray = []
 labels = []
-images = glob.glob('../dataset/UtahAudioData/SpectogramImages/4ClassesDerivate/concrete_mixer/*.png')
+images = glob.glob('../dataset/segments/concrete_mixer/ConcreteMixer_onsite/*.png')
 
 for image in images:
     with open(image, 'rb') as file:
@@ -31,7 +31,7 @@ for image in images:
         imageArray.append(img)
         labels.append(0.0)
 
-images = glob.glob('../dataset/UtahAudioData/SpectogramImages/4ClassesDerivate/dozer_JD700J/*.png')
+images = glob.glob('../dataset/segments/dozer_JD700J/JD700J_onsite/*.png')
 for image in images:
     with open(image, 'rb') as file:
         img = Image.open(file)
@@ -39,7 +39,7 @@ for image in images:
         imageArray.append(img)
         labels.append(1.0)
 
-images = glob.glob('../dataset/UtahAudioData/SpectogramImages/4ClassesDerivate/excavator_JD50G/*.png')
+images = glob.glob('../dataset/segments/excavator_JD50G/JD50G_onsite/*.png')
 for image in images:
     with open(image, 'rb') as file:
         img = Image.open(file)
@@ -47,7 +47,7 @@ for image in images:
         imageArray.append(img)
         labels.append(2.0)
 
-images = glob.glob('../dataset/UtahAudioData/SpectogramImages/4ClassesDerivate/grader_JD670G/*.png')
+images = glob.glob('../dataset/segments/grader_JD670G/JD670G_onsite/*.png')
 for image in images:
     with open(image, 'rb') as file:
         img = Image.open(file)
@@ -145,7 +145,7 @@ class SpectroCNN(tf.keras.Model):
     x = self.conv3(x)
     x = self.conv4(x)
     x = self.conv5(x)
-
+    
     x = self.dense(tf.reshape(x, (-1, 189504)))
     x = self.dropout(x, training=training)
 
@@ -155,12 +155,14 @@ class SpectroCNN(tf.keras.Model):
 #cnn = CNN()
 cnn = SpectroCNN()
 
+
+
 for xb, yb in train_it.batch(1):
-  print(cnn(xb))
-  break
+    #print(cnn(xb))
+    break
 
 def loss(net, x, y):
-  return tf.losses.sparse_softmax_cross_entropy(logits=net(x, training=True), labels=y)
+    return tf.losses.sparse_softmax_cross_entropy(logits=net(x, training=True), labels=y)
 
 opt = tf.train.AdamOptimizer()
 epochs = 10
@@ -176,10 +178,12 @@ for epoch in range(epochs):
     #print(xb,yb)
     ypred = cnn(xb)
     accTrain(predictions=ypred, labels=yb)
-    print("predicted label train:")
-    print(ypred)
-    print("Real label train:")
-    print(yb)
+# =============================================================================
+#     print("predicted label train:")
+#     print(ypred)
+#     print("Real label train:")
+#     print(yb)
+# =============================================================================
     lossValue = tf.losses.sparse_softmax_cross_entropy(yb, ypred)
     #trainConfMatrix = tf.confusion_matrix(labels = yb, predictions = ypred)
 
@@ -188,12 +192,14 @@ for epoch in range(epochs):
     #print(xb,yb)
     ypred = cnn(xb)
     accTest(predictions=ypred, labels=yb)
-    print("predicted label test:")
-    print(ypred)
-    print("Real label test:")
-    print(yb)
-    print(ypred)
-    print(yb)
+# =============================================================================
+#     print("predicted label test:")
+#     print(ypred)
+#     print("Real label test:")
+#     print(yb)
+#     print(ypred)
+#     print(yb)
+# =============================================================================
     #testConfMatrix = tf.confusion_matrix(labels = yb, predictions = ypred)
     
   trainAccuracy[epoch] = accTrain.result().numpy()

@@ -6,7 +6,6 @@ import librosa.display
 
 import os
 
-
 class Spectrum:
 
     @staticmethod
