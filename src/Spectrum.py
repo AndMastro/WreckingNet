@@ -6,12 +6,6 @@ import librosa.display
 
 import os
 
-class Waver:
-    
-    def get_waveform(path):
-        
-        
-
 class Spectrum:
 
     @staticmethod
