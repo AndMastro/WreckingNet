@@ -6,6 +6,11 @@ import librosa.display
 
 import os
 
+class Waver:
+    
+    def get_waveform(path):
+        
+        
 
 class Spectrum:
 
@@ -96,7 +101,7 @@ class Spectrum:
         return np.stack([log_spec, delta_log_spec], axis=-1)
 
     @staticmethod
-    def get_specgram_librosa(path, fmt='png', which='both', sample_rate=2205, nfft=1024, hop_len=512, n_mel_bands=128):
+    def get_specgram_librosa(path, fmt='png', which='both', sample_rate=22050, nfft=1024, hop_len=512, n_mel_bands=128):
         """
         :param path: str
             path where the wav file is located
