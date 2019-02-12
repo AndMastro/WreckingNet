@@ -74,7 +74,7 @@ class rawCNN(tf.keras.Model):
         x = self.conv3(x)
         x = self.conv4(x)
         x = self.conv5(x)
-        x = self.dense(tf.reshape(x, [-1, 8 * 54 * 64]))  # this is not so correct, is this needed?
+        x = self.dense(tf.reshape(x, [x.shape[0], -1]))  # this is not so correct, is this needed?
         #x = self.dense(tf.reshape(x, [-1, 49152]))
         x = self.dropout(x, training=training)
 
