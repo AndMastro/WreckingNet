@@ -107,12 +107,13 @@ class SpectroCNN(tf.keras.Model):
         self.logits = tf.layers.Dense(units=5)
 
     def call(self, x, training=False):
+        batch_size = x.shape[0]
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.conv3(x)
         x = self.conv4(x)
         x = self.conv5(x)
-        x = self.dense(tf.reshape(x, [-1, 8 * 54 * 64]))  # this is not so correct
+        x = self.dense(tf.reshape(x, [batch_size, -1]))  # this is not so correct
         #x = self.dense(tf.reshape(x, [-1, 49152]))
         x = self.dropout(x, training=training)
 
@@ -156,22 +157,20 @@ if __name__ == "__main__":
     train_it = tf.data.Dataset.from_tensor_slices((Xtrain, Ytrain))
     test_it = tf.data.Dataset.from_tensor_slices((Xtest, Ytest))
 
-    '''
+
     def _parse_example(x, y):
         x = tf.cast(x, tf.float32)
         y = tf.cast(y, tf.int32)
         return x, y
 
-
     train_it = train_it.map(_parse_example)
     test_it = test_it.map(_parse_example)
-    '''
 
     cnn = SpectroCNN()
 
 
     def loss(net, x, y):
-        return tf.losses.sparse_softmax_cross_entropy(logits=net(x, training=True), labels=tf.argmax(y, 1))
+        return tf.losses.sparse_softmax_cross_entropy(logits=net(x, training=True), labels=y)
 
     opt = tf.train.AdamOptimizer()
 
@@ -185,8 +184,8 @@ if __name__ == "__main__":
         accTrain = tfe.metrics.SparseAccuracy()
         for xb, yb in train_it.batch(16):
             ypred = cnn(xb)
-            accTrain(predictions=ypred, labels=tf.argmax(yb, 1))
-            lossValue = tf.losses.sparse_softmax_cross_entropy(logits=ypred, labels=tf.argmax(yb, 1))
+            accTrain(predictions=ypred, labels=yb)
+            lossValue = tf.losses.sparse_softmax_cross_entropy(logits=ypred, labels=yb)
             lossValues.append(lossValue)
 
         accTest = tfe.metrics.SparseAccuracy()
@@ -194,7 +193,7 @@ if __name__ == "__main__":
             # print("test")
             # print(xb, yb)
             ypred = cnn(xb)
-            accTest(predictions=ypred, labels=tf.argmax(yb, 1))
+            accTest(predictions=ypred, labels=yb)
 
         trainAcc.append(accTrain.result().numpy())
         testAcc.append(accTest.result().numpy())
