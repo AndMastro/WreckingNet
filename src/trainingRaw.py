@@ -70,7 +70,7 @@ if __name__ == "__main__":
     dataset_path_get = '../dataset/segments'
 
     batch_size = 16
-    epochs = 20
+    epochs = 30
 
     # read data
     dataset = load(dataset_path)
