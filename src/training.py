@@ -124,14 +124,14 @@ if __name__ == "__main__":
     for epoch in range(epochs):
 
         accTrain = tfe.metrics.SparseAccuracy()
-        for xb, yb in train_it.batch(16):
+        for xb, yb in train_it.batch(batch_size):
             ypred = cnn(xb)
             accTrain(predictions=ypred, labels=yb)
             lossValue = tf.losses.sparse_softmax_cross_entropy(logits=ypred, labels=yb)
             lossValues.append(lossValue)
 
         accTest = tfe.metrics.SparseAccuracy()
-        for xb, yb in test_it.batch(16):
+        for xb, yb in test_it.batch(batch_size):
             # print("test")
             # print(xb, yb)
             ypred = cnn(xb)
@@ -144,7 +144,7 @@ if __name__ == "__main__":
         print('Test accuracy at epoch {} is {} %'.format(epoch, testAcc[-1] * 100))
         print('Loss value at epoch {} is {}'.format(epoch, lossValue))
 
-        for xb, yb in train_it.shuffle(1000).batch(16):
+        for xb, yb in train_it.shuffle(1000).batch(batch_size):
             opt.minimize(lambda: loss(cnn, xb, yb))
 
     plt.plot(trainAcc)
@@ -157,7 +157,7 @@ if __name__ == "__main__":
     pred = []
     true = []
 
-    for xb, yb in test_it.batch(16):
+    for xb, yb in test_it.batch(batch_size):
         ypred = cnn(xb)
         to_append = [tf.argmax(x) for x in ypred]
         pred = pred + to_append
