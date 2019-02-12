@@ -69,7 +69,7 @@ if __name__ == "__main__":
     dataset_path = '../dataset/waveforms'
     dataset_path_get = '../dataset/segments'
 
-    batch_size = 16
+    batch_size = 8
     epochs = 20
 
     # read data
