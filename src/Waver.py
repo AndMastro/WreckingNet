@@ -55,6 +55,6 @@ class Waver:
 
 
 # =============================================================================
-# if __name__ == "__main__":
-#     Waver.save_waves(DATAPATH, SAVEPATH, PICKFILE)
+if __name__ == "__main__":
+     Waver.save_waves(DATAPATH, SAVEPATH, PICKFILE)
 # =============================================================================
