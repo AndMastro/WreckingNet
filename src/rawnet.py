@@ -10,10 +10,10 @@ import tensorflow as tf
 
 #classes = ['concrete_mixer/ConcreteMixer_onsite/', 'dozer_JD700J/JD700J_onsite', 'excavator_JD50G/JD50G_onsite', 'grader_JD670G/JD670G_onsite']
 
-class SpectroCNN(tf.keras.Model):
+class rawCNN(tf.keras.Model):
 
     def __init__(self):
-        super(SpectroCNN, self).__init__()
+        super(rawCNN, self).__init__()
 
         self.convPre1 = tf.layers.Conv2D(filters=40,
                                       kernel_size=[1, 8],
