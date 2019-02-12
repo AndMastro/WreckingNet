@@ -67,9 +67,9 @@ class rawCNN(tf.keras.Model):
         self.logits = tf.layers.Dense(units=5) #logits must suit the number of classes
 
     def call(self, x, training=False):
-        x = self.convPre1(x)
+        x = self.convPre1(tf.reshape(x, [x.shape[0], 1, -1, 1]))
         x = self.poolPre1(self.convPre2(x))
-        x = self.conv1(tf.reshape(x, [40, 160, 1]))
+        x = self.conv1(tf.reshape(x, [x.shape[0], 40, -1, 1]))
         x = self.conv2(x)
         x = self.conv3(x)
         x = self.conv4(x)
