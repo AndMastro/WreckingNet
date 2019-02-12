@@ -42,13 +42,10 @@ def read_dataset(src_path):
     classes = os.listdir(src_path)
     class_dict = dict()
     class_id = 0
-    num_classes = len(classes)
     dataset = []
     for class_type in classes:
         print(class_type)
-        class_one_hot = [0. for _ in range(num_classes)]
-        class_one_hot[class_id] = 1.
-        new_data = _read_aux(os.path.join(src_path, class_type), class_one_hot)
+        new_data = _read_aux(os.path.join(src_path, class_type), class_id)
         print('class size is: ', len(new_data))
         dataset = dataset+new_data
         class_dict[class_type] = class_id

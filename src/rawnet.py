@@ -63,7 +63,6 @@ class rawCNN(tf.keras.Model):
         self.dense = tf.layers.Dense(200, activation=tf.nn.relu)
         self.dropout = tf.layers.Dropout(0.3)  # to be improved
 
-        # self.logits = tf.layers.Dense(units=4, activation=tf.nn.softmax)
         self.logits = tf.layers.Dense(units=5) #logits must suit the number of classes
 
     def call(self, x, training=False):
@@ -74,8 +73,7 @@ class rawCNN(tf.keras.Model):
         x = self.conv3(x)
         x = self.conv4(x)
         x = self.conv5(x)
-        x = self.dense(tf.reshape(x, [x.shape[0], -1]))  # this is not so correct, is this needed?
-        #x = self.dense(tf.reshape(x, [-1, 49152]))
+        x = self.dense(tf.reshape(x, [x.shape[0], -1]))
         x = self.dropout(x, training=training)
 
         return self.logits(x)
