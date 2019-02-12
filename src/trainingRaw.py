@@ -151,6 +151,8 @@ if __name__ == "__main__":
     plt.show()
     plt.plot(testAcc)
     plt.show()
+    plt.plot(lossValues)
+    plt.show()
 
     pred = []
     true = []
