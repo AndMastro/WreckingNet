@@ -114,7 +114,7 @@ if __name__ == "__main__":
     def loss(net, x, y):
         return tf.losses.sparse_softmax_cross_entropy(logits=net(x, training=True), labels=y)
 
-    opt = tf.train.AdamOptimizer()
+    opt = tf.train.AdamOptimizer(learning_rate = 0.00001)
 
 
     trainAcc = []
