@@ -1,0 +1,137 @@
+==================================
+Train accuracy at epoch 0 is 22.149122807017545 %
+Test accuracy at epoch 0 is 21.93877551020408 %
+Loss value at epoch 0 is 1.6100585460662842
+==================================
+Train accuracy at epoch 1 is 39.91228070175439 %
+Test accuracy at epoch 1 is 42.3469387755102 %
+Loss value at epoch 1 is 1.3303344249725342
+==================================
+Train accuracy at epoch 2 is 44.29824561403509 %
+Test accuracy at epoch 2 is 51.02040816326531 %
+Loss value at epoch 2 is 1.249790906906128
+==================================
+Train accuracy at epoch 3 is 44.51754385964912 %
+Test accuracy at epoch 3 is 47.95918367346938 %
+Loss value at epoch 3 is 1.1460211277008057
+==================================
+Train accuracy at epoch 4 is 48.026315789473685 %
+Test accuracy at epoch 4 is 52.04081632653062 %
+Loss value at epoch 4 is 1.1561285257339478
+==================================
+Train accuracy at epoch 5 is 53.07017543859649 %
+Test accuracy at epoch 5 is 55.61224489795919 %
+Loss value at epoch 5 is 1.0743448734283447
+==================================
+Train accuracy at epoch 6 is 53.50877192982456 %
+Test accuracy at epoch 6 is 59.183673469387756 %
+Loss value at epoch 6 is 1.1519780158996582
+==================================
+Train accuracy at epoch 7 is 52.85087719298246 %
+Test accuracy at epoch 7 is 54.08163265306123 %
+Loss value at epoch 7 is 1.1492774486541748
+==================================
+Train accuracy at epoch 8 is 59.42982456140351 %
+Test accuracy at epoch 8 is 60.71428571428571 %
+Loss value at epoch 8 is 1.3021714687347412
+==================================
+Train accuracy at epoch 9 is 62.71929824561403 %
+Test accuracy at epoch 9 is 61.224489795918366 %
+Loss value at epoch 9 is 0.9563722610473633
+==================================
+Train accuracy at epoch 10 is 61.40350877192983 %
+Test accuracy at epoch 10 is 61.224489795918366 %
+Loss value at epoch 10 is 0.7443208694458008
+==================================
+Train accuracy at epoch 11 is 71.9298245614035 %
+Test accuracy at epoch 11 is 69.89795918367348 %
+Loss value at epoch 11 is 1.0192365646362305
+==================================
+Train accuracy at epoch 12 is 66.00877192982456 %
+Test accuracy at epoch 12 is 70.40816326530613 %
+Loss value at epoch 12 is 0.8311339616775513
+==================================
+Train accuracy at epoch 13 is 79.82456140350878 %
+Test accuracy at epoch 13 is 78.06122448979592 %
+Loss value at epoch 13 is 1.0730888843536377
+==================================
+Train accuracy at epoch 14 is 81.14035087719299 %
+Test accuracy at epoch 14 is 78.57142857142857 %
+Loss value at epoch 14 is 0.9510533809661865
+==================================
+Train accuracy at epoch 15 is 82.45614035087719 %
+Test accuracy at epoch 15 is 79.59183673469387 %
+Loss value at epoch 15 is 1.2103866338729858
+==================================
+Train accuracy at epoch 16 is 81.35964912280701 %
+Test accuracy at epoch 16 is 84.6938775510204 %
+Loss value at epoch 16 is 0.739543616771698
+==================================
+Train accuracy at epoch 17 is 88.59649122807018 %
+Test accuracy at epoch 17 is 85.20408163265306 %
+Loss value at epoch 17 is 0.7577225565910339
+==================================
+Train accuracy at epoch 18 is 83.77192982456141 %
+Test accuracy at epoch 18 is 88.26530612244898 %
+Loss value at epoch 18 is 0.6013933420181274
+==================================
+Train accuracy at epoch 19 is 87.06140350877193 %
+Test accuracy at epoch 19 is 83.16326530612244 %
+Loss value at epoch 19 is 0.7432736158370972
+==================================
+Train accuracy at epoch 20 is 90.5701754385965 %
+Test accuracy at epoch 20 is 87.24489795918367 %
+Loss value at epoch 20 is 0.6018303632736206
+==================================
+Train accuracy at epoch 21 is 88.81578947368422 %
+Test accuracy at epoch 21 is 85.20408163265306 %
+Loss value at epoch 21 is 0.5707809925079346
+==================================
+Train accuracy at epoch 22 is 91.00877192982456 %
+Test accuracy at epoch 22 is 88.77551020408163 %
+Loss value at epoch 22 is 0.2917276918888092
+==================================
+Train accuracy at epoch 23 is 90.35087719298247 %
+Test accuracy at epoch 23 is 90.3061224489796 %
+Loss value at epoch 23 is 0.3547321557998657
+==================================
+Train accuracy at epoch 24 is 92.32456140350878 %
+Test accuracy at epoch 24 is 89.79591836734694 %
+Loss value at epoch 24 is 0.5651935338973999
+==================================
+Train accuracy at epoch 25 is 92.10526315789474 %
+Test accuracy at epoch 25 is 89.28571428571429 %
+Loss value at epoch 25 is 0.4704246520996094
+==================================
+Train accuracy at epoch 26 is 90.35087719298247 %
+Test accuracy at epoch 26 is 91.3265306122449 %
+Loss value at epoch 26 is 0.3298475444316864
+==================================
+Train accuracy at epoch 27 is 93.64035087719299 %
+Test accuracy at epoch 27 is 90.3061224489796 %
+Loss value at epoch 27 is 0.44674450159072876
+==================================
+Train accuracy at epoch 28 is 94.73684210526315 %
+Test accuracy at epoch 28 is 91.3265306122449 %
+Loss value at epoch 28 is 0.45096835494041443
+==================================
+Train accuracy at epoch 29 is 92.76315789473685 %
+Test accuracy at epoch 29 is 89.79591836734694 %
+Loss value at epoch 29 is 0.3788638710975647
+[[53  0  4  5  0]
+ [ 0 28  0  0  1]
+ [ 0  0 31  0  0]
+ [ 0  7  3 23  2]
+ [ 0 11  0  1 27]]
+[0 0 0 2 1 0 1 3 1 1 0 2 3 2 4 0 0 1 2 1 0 2 1 2 4 0 2 1 3 3 0 0 2 0 3 3 3
+ 4 0 1 4 1 2 1 1 3 1 2 3 1 1 1 2 4 0 2 2 0 0 1 3 1 0 0 4 1 2 0 3 0 1 2 1 0
+ 3 3 4 2 4 0 2 4 0 0 2 2 0 4 3 1 0 1 1 3 1 4 4 2 0 4 0 0 3 2 4 3 0 3 4 0 2
+ 1 2 4 1 3 1 0 0 0 1 1 4 0 2 1 3 4 3 4 2 0 2 4 0 3 3 1 3 0 3 1 2 0 3 4 3 0
+ 3 0 1 1 2 2 0 1 4 1 2 0 4 1 2 1 2 2 0 1 4 2 2 0 0 0 1 2 0 1 4 4 3 1 0 2 1
+ 1 0 4 0 0 4 4 4 1 2 0]
+[0 0 0 2 1 0 1 3 1 1 0 2 3 2 4 0 0 1 2 3 0 2 1 2 1 0 2 3 3 3 0 0 2 0 3 3 3
+ 4 0 4 3 1 2 3 1 0 4 2 3 4 4 4 2 4 0 3 2 0 0 1 3 3 0 0 4 1 2 0 3 0 1 0 1 0
+ 3 3 4 0 4 0 2 4 0 0 0 2 0 4 3 1 0 1 1 3 1 4 4 2 0 4 0 0 3 2 4 4 0 0 4 0 2
+ 4 2 4 4 0 1 0 0 0 1 1 4 0 2 1 3 4 3 4 2 0 2 4 0 0 3 3 0 0 3 1 2 0 3 3 3 0
+ 3 0 4 4 3 3 0 4 4 1 2 0 4 1 2 1 0 2 0 4 4 2 2 0 0 0 1 2 0 3 4 4 3 1 0 2 3
+ 1 0 4 0 0 4 4 4 1 2 0]
