@@ -94,8 +94,9 @@ if __name__ == "__main__":
     test_dataset_path = '../dataset/data_test_pickle'
     test_dataset_path_get = '../dataset/segments/testing'
 
-    batch_size = 1024
-    epochs = 20
+    batch_size = 4096
+    epochs = 10
+    learning_rate = 0.001
 
     # read train data
     train_set = load(train_dataset_path)
@@ -149,7 +150,7 @@ if __name__ == "__main__":
     def loss(net, x, y):
         return tf.losses.sparse_softmax_cross_entropy(logits=net(x, training=True), labels=y)
 
-    opt = tf.train.AdamOptimizer(learning_rate=0.00001)
+    opt = tf.train.AdamOptimizer(learning_rate=learning_rate)
 
     trainAcc = []
     testAcc = []
