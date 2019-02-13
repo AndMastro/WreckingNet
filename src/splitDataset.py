@@ -41,7 +41,3 @@ def split_datasets(datapath, trainpath, testpath, perc=0.7):
     
     
     return
-    
-
-if __name__ == "__main__":
-    split_datasets(DATAPATH, TRAINSEG, TESTSEG, 0.7)
