@@ -12,6 +12,7 @@ DATAPATH = "../dataset/UtahAudioData"
 TRAINSEG = "../dataset/partitions/training"
 TESTSEG  = "../dataset/partitions/testing"
 
+
 def split_datasets(datapath, trainpath, testpath, perc=0.7):
     
     perc = min(1.0, perc)
@@ -25,19 +26,21 @@ def split_datasets(datapath, trainpath, testpath, perc=0.7):
             audio = AudioSegment.from_file(trackpath)
             
             form = track.split(".")[-1]
+
+            train_seg = audio[:int(perc*len(audio))]
+            test_seg = audio[int(perc*len(audio)):]
+
+            out_trainpath =  os.path.join(trainpath, str(cat), str(track.split(".")[0]))
+            out_testpath =  os.path.join(testpath, str(cat), str(track.split(".")[0]))
+
+            if not os.path.isdir(out_trainpath):
+                os.makedirs(out_trainpath)
             
-            train_seg = audio[:int(round(perc*len(audio), 0))]
-            test_seg = audio[int(round(perc*len(audio)))+1:]
+            train_seg.export(os.path.join(out_trainpath, track), format=form)
             
-            if not os.path.isdir(trainpath):
-                os.makedirs(trainpath)
+            if not os.path.isdir(out_testpath):
+                os.makedirs(out_testpath)
             
-            train_seg.export(os.path.join(trainpath, track), format=form)
-            
-            if not os.path.isdir(testpath):
-                os.makedirs(testpath)
-            
-            test_seg.export(os.path.join(testpath, track), format=form)
-    
-    
+            test_seg.export(os.path.join(out_testpath, track), format=form)
+
     return

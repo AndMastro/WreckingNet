@@ -1,10 +1,11 @@
 import os
 
 from pydub import AudioSegment
+import numpy as np
 from Spectrum import Spectrum
 
 
-def partition_track(track_path, out_path, ms, hop=None, threshold=1000):
+def partition_track(track_path, out_path, ms, hop=None, get_drop=False):
 
     if hop is None:
         hop = ms
@@ -33,15 +34,23 @@ def partition_track(track_path, out_path, ms, hop=None, threshold=1000):
 
     #threshold = threshold / x
     # =============================
-    sil = AudioSegment.empty()
+
+    rms = np.array([x.rms for x in segments])
+    q1 = np.percentile(rms, .25)
+    q3 = np.percentile(rms, .75)
+
+    lf = q1 - 1.5*(q3-q1)
+
+    lo_sil = AudioSegment.empty()
 
     for idx, segment in enumerate(segments):
-        if segment.rms < threshold:
-            sil = sil + segment
-            continue
-        segment.export(os.path.join(out_path, str(str(idx) + "." + form)), format=form)
+        if segment.rms < lf:
+            lo_sil = lo_sil + segment
+        else:
+            segment.export(os.path.join(out_path, str(str(idx) + "." + form)), format=form)
 
-    sil.export(os.path.join(out_path, 'sil.wav'), format=form)
+    if get_drop:
+        lo_sil.export(os.path.join(out_path, 'lo_sil.wav'), format=form)
 
 
 def partition_dataset(in_path, out_path, ms, hop):
@@ -65,9 +74,18 @@ def partition_dataset(in_path, out_path, ms, hop):
 
 if __name__ == "__main__":
     import sys
+    from splitDataset import split_datasets
+
     DATAPATH = "../dataset/5Classes"
-    OUT = "../dataset/segments"
-    AUDIOMS = 1000
-    HOPMS = 500
-    partition_dataset(DATAPATH, OUT, AUDIOMS, HOPMS)
+    TRAINSEG = "../dataset/partitions/training"
+    TESTSEG = "../dataset/partitions/testing"
+
+    TrainOUT = "../dataset/segments/training"
+    TestOUT = "../dataset/segments/testing"
+    AUDIOMS = 30
+    HOPMS = 15
+
+    split_datasets(DATAPATH, TRAINSEG, TESTSEG)
+    partition_dataset(TRAINSEG, TrainOUT, AUDIOMS, HOPMS)
+    partition_dataset(TESTSEG, TestOUT, AUDIOMS, HOPMS)
     sys.exit(0)

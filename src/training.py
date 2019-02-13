@@ -53,6 +53,28 @@ def read_dataset(src_path):
 
     return class_dict, dataset
 
+def read_dataset_test(src_path, class_dict):
+    def _read_aux(path, one_hot):
+        ret = []
+        if (not os.path.isdir(path)) and path.endswith('.wav'):
+            val = (Spectrum.compute_specgram_and_delta(path), one_hot)
+            ret.append(val)
+        elif os.path.isdir(path):
+            folders = os.listdir(path)
+            for folder in folders:
+                ret += _read_aux(os.path.join(path, str(folder)), one_hot)
+        return ret
+
+    classes = os.listdir(src_path)
+    dataset = []
+    for class_type in classes:
+        class_id = class_dict[class_type]
+        print(class_type)
+        new_data = _read_aux(os.path.join(src_path, class_type), class_id)
+        print('class size is: ', len(new_data))
+        dataset = dataset+new_data
+
+    return class_dict, dataset
 
 def get_samples_and_labels(data):
     X = []
@@ -66,31 +88,40 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
     import numpy as np
 
-    dataset_path = '../dataset/data_pickle'
-    dataset_path_get = '../dataset/segments'
+    train_dataset_path = '../dataset/data_train_pickle'
+    train_dataset_path_get = '../dataset/segments/training'
+
+    test_dataset_path = '../dataset/data_test_pickle'
+    test_dataset_path_get = '../dataset/segments/testing'
 
     batch_size = 16
     epochs = 20
 
-    # read data
-    dataset = load(dataset_path)
-    if dataset is None:
-        print('None data')
-        dataset = read_dataset(dataset_path_get)
-        save(dataset, dataset_path)
+    # read train data
+    train_set = load(train_dataset_path)
+    if train_set is None:
+        print("No Train data")
+        train_set = read_dataset(train_dataset_path_get)
+        save(train_set, train_dataset_path)
 
-    class_dict, data = dataset
-    random.shuffle(data)
+    class_train_dict, train_data = train_set
+    random.shuffle(train_set)
 
-    X, Y = get_samples_and_labels(data)
+    # read train data
+    test_set = load(train_dataset_path)
+    if test_set is None:
+        print("No Test data")
+        train_set = read_dataset_test(test_dataset_path_get, class_train_dict)
+        save(test_set, test_dataset_path)
 
-    print(len(X))
-    split_size = int(len(X)*0.7)
+    class_test_dict, test_data = test_set
+    random.shuffle(test_set)
 
-    Xtrain = X[:split_size]
-    Ytrain = Y[:split_size]
-    Xtest = X[split_size:]
-    Ytest = Y[split_size:]
+    Xtrain, Ytrain = get_samples_and_labels(train_data)
+    Xtest, Ytest = get_samples_and_labels(test_data)
+
+    print("Train size", len(Ytrain))
+    print("Test size", len(Ytest))
 
     Xtrain = tf.convert_to_tensor(Xtrain, dtype=tf.float32)
     Ytrain = tf.convert_to_tensor(Ytrain, dtype=tf.float32)

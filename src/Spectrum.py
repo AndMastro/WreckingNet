@@ -88,9 +88,8 @@ class Spectrum:
 
         # generating first channel, log-scaled mel spectrogram (default parameters match the ones used in the paper)
         log_spec = librosa.power_to_db(spec, ref=np.max)
-
         # delta computation, second channel
-        delta_log_spec = librosa.feature.delta(log_spec)
+        delta_log_spec = librosa.feature.delta(log_spec, mode='nearest')
 
         return np.stack([log_spec, delta_log_spec], axis=-1)
 
