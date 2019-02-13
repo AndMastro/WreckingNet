@@ -94,7 +94,7 @@ if __name__ == "__main__":
     test_dataset_path = '../dataset/data_test_pickle'
     test_dataset_path_get = '../dataset/segments/testing'
 
-    batch_size = 16
+    batch_size = 1024
     epochs = 20
 
     # read train data
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     test_set = load(test_dataset_path)
     if test_set is None:
         print("No Test data")
-        train_set = read_dataset_test(test_dataset_path_get, class_train_dict)
+        test_set = read_dataset_test(test_dataset_path_get, class_train_dict)
         save(test_set, test_dataset_path)
 
     class_test_dict, test_data = test_set
@@ -127,9 +127,13 @@ if __name__ == "__main__":
     Ytrain = tf.convert_to_tensor(Ytrain, dtype=tf.float32)
     Xtest = tf.convert_to_tensor(Xtest, dtype=tf.float32)
     Ytest = tf.convert_to_tensor(Ytest, dtype=tf.float32)
+
+    print("Allocationg tensors")
+
     train_it = tf.data.Dataset.from_tensor_slices((Xtrain, Ytrain))
     test_it = tf.data.Dataset.from_tensor_slices((Xtest, Ytest))
 
+    print("Done")
 
     def _parse_example(x, y):
         x = tf.cast(x, tf.float32)
@@ -145,12 +149,13 @@ if __name__ == "__main__":
     def loss(net, x, y):
         return tf.losses.sparse_softmax_cross_entropy(logits=net(x, training=True), labels=y)
 
-    opt = tf.train.AdamOptimizer(learning_rate = 0.00001)
-
+    opt = tf.train.AdamOptimizer(learning_rate=0.00001)
 
     trainAcc = []
     testAcc = []
     lossValues = []
+
+    print("Train Loop")
 
     for epoch in range(epochs):
 
@@ -163,8 +168,6 @@ if __name__ == "__main__":
 
         accTest = tfe.metrics.SparseAccuracy()
         for xb, yb in test_it.batch(batch_size):
-            # print("test")
-            # print(xb, yb)
             ypred = cnn(xb)
             accTest(predictions=ypred, labels=yb)
 
@@ -174,6 +177,7 @@ if __name__ == "__main__":
         print('Train accuracy at epoch {} is {} %'.format(epoch, trainAcc[-1] * 100))
         print('Test accuracy at epoch {} is {} %'.format(epoch, testAcc[-1] * 100))
         print('Loss value at epoch {} is {}'.format(epoch, lossValue))
+        print('==================================')
 
         for xb, yb in train_it.shuffle(1000).batch(batch_size):
             opt.minimize(lambda: loss(cnn, xb, yb))
@@ -206,5 +210,4 @@ if __name__ == "__main__":
 
     print(np.array(pred))
     print(np.array(true))
-
     
