@@ -105,17 +105,17 @@ if __name__ == "__main__":
         save(train_set, train_dataset_path)
 
     class_train_dict, train_data = train_set
-    random.shuffle(train_set)
+    random.shuffle(train_data)
 
     # read train data
-    test_set = load(train_dataset_path)
+    test_set = load(test_dataset_path)
     if test_set is None:
         print("No Test data")
         train_set = read_dataset_test(test_dataset_path_get, class_train_dict)
         save(test_set, test_dataset_path)
 
     class_test_dict, test_data = test_set
-    random.shuffle(test_set)
+    random.shuffle(test_data)
 
     Xtrain, Ytrain = get_samples_and_labels(train_data)
     Xtest, Ytest = get_samples_and_labels(test_data)
