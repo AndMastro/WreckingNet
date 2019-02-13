@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     pickle_sample = '../dataset/data_train_pickle'
 
-    batch_size = 4096
+    batch_size = 2048
     epochs = 10
     learning_rate = 0.01
 
@@ -84,6 +84,7 @@ if __name__ == "__main__":
     train_it = tf.data.Dataset.from_tensor_slices((Xtrain, Ytrain))
     test_it = tf.data.Dataset.from_tensor_slices((Xtest, Ytest))
 
+    print("Allocated Tensors")
 
     def _parse_example(x, y):
         x = tf.cast(x, tf.float32)
