@@ -70,7 +70,7 @@ if __name__ == "__main__":
     dataset_path_get = '../dataset/segments'
 
     batch_size = 16
-    epochs = 20
+    epochs = 40
 
     # read data
     dataset = load(dataset_path)
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     def loss(net, x, y):
         return tf.losses.sparse_softmax_cross_entropy(logits=net(x, training=True), labels=y)
 
-    opt = tf.train.AdamOptimizer(learning_rate = 0.00001)
+    opt = tf.train.AdamOptimizer(learning_rate = 0.00001) #with 0.001 too much oscillation in loss. With 0.0001 converges faster and smaller loss. 0.00001 we like the loss.
 
 
     trainAcc = []
