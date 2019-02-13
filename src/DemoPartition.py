@@ -2,7 +2,6 @@ import os
 
 from pydub import AudioSegment
 import numpy as np
-from Spectrum import Spectrum
 
 
 def partition_track(track_path, out_path, ms, hop=None, get_drop=False):
@@ -15,7 +14,7 @@ def partition_track(track_path, out_path, ms, hop=None, get_drop=False):
     size = len(audio)
     segments = []
     i = 0
-    while (i + ms < size):
+    while i + ms < size:
         next_segment = audio[i:i + ms]
         segments.append(next_segment)
         i = i + hop
@@ -24,16 +23,6 @@ def partition_track(track_path, out_path, ms, hop=None, get_drop=False):
 
     if not os.path.isdir(out_path):
         os.makedirs(out_path)
-
-    # =============================
-    #threshold = 0
-    #x = 0
-    #for el in segments:
-    #    threshold = threshold + el.rms
-    #    x = x+1
-
-    #threshold = threshold / x
-    # =============================
 
     rms = np.array([x.rms for x in segments])
     q1 = np.percentile(rms, .25)
@@ -56,20 +45,14 @@ def partition_track(track_path, out_path, ms, hop=None, get_drop=False):
 def partition_dataset(in_path, out_path, ms, hop):
     if not os.path.isdir(in_path):
         print(out_path)
-        # in_path is a file, create out_path and convert
         partition_track(in_path, str(out_path), ms, hop)
 
-        #for segment in os.listdir(out_path):
-        #    seg_path = os.path.join(out_path, segment)
-        #    Spectrum.get_specgram_librosa(seg_path)
     else:
         folders = os.listdir(in_path)
         for folder in folders:
             new_in_path = os.path.join(in_path, str(folder))
             new_out_path = os.path.join(out_path, str(folder))
             partition_dataset(new_in_path, new_out_path, ms, hop)
-        # enumerate dirs
-        # call partition
 
 
 if __name__ == "__main__":

@@ -1,5 +1,3 @@
-import glob
-import os
 import random
 import pickle
 
@@ -26,13 +24,15 @@ def save(dataset, path):
     with open(path, 'wb') as fout:
         pickle.dump(dataset, fout)
 
+
 def get_samples_and_labels(data):
     X = []
     Y = []
-    for x,y in data:
+    for x, y in data:
         X.append(x)
         Y.append(y)
     return X, Y
+
 
 if __name__ == "__main__":
 
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     test_set = load(test_dataset_path)
     if test_set is None:
         print("No Test data")
-        test_set = Waver.save_waves(test_dataset_path_get, test_dataset_path, pickle_sample, True)#read_dataset_test(test_dataset_path_get, class_train_dict)
+        test_set = Waver.save_waves(test_dataset_path_get, test_dataset_path, pickle_sample, True)
         save(test_set, test_dataset_path)
 
     class_test_dict, test_data = test_set
@@ -99,8 +99,7 @@ if __name__ == "__main__":
     def loss(net, x, y):
         return tf.losses.sparse_softmax_cross_entropy(logits=net(x, training=True), labels=y)
 
-    opt = tf.train.AdamOptimizer(learning_rate=learning_rate) #it helps to go out the local minimum. with 0.0001 and 40 epochs ok. Must remove oscillations.
-
+    opt = tf.train.AdamOptimizer(learning_rate=learning_rate)
 
     trainAcc = []
     testAcc = []
@@ -160,5 +159,3 @@ if __name__ == "__main__":
 
     print(np.array(pred))
     print(np.array(true))
-
-    

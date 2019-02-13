@@ -15,6 +15,7 @@ AUDIOMS = 30000
 SPECFORMAT = 'png'
 SPECWHICH = 'log'
 
+
 def main(datapath, outpath, ms, form, spec):
     
     print("Partitioning dataset...")    
@@ -36,6 +37,7 @@ def main(datapath, outpath, ms, form, spec):
     print("Spectrograms created")
     
     return
+
 
 if __name__ == "__main__":
     main(DATAPATH, OUT, AUDIOMS, SPECFORMAT, SPECWHICH)

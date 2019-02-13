@@ -10,7 +10,7 @@ import os
 
 DATAPATH = "../dataset/UtahAudioData"
 TRAINSEG = "../dataset/partitions/training"
-TESTSEG  = "../dataset/partitions/testing"
+TESTSEG = "../dataset/partitions/testing"
 
 
 def split_datasets(datapath, trainpath, testpath, perc=0.7):

@@ -40,7 +40,7 @@ class Waver:
             
             curl = class_dict[cat]    
             
-            print(curl)
+            #print(curl)
             
             for track in os.listdir(catpath):                
                 trackpath = os.path.join(catpath, track)  
@@ -49,10 +49,10 @@ class Waver:
                     signal = Waver.get_waveform(os.path.join(trackpath, segment), normalize=normalize)
                     data.append((signal, curl))
         
-        print("dumping...")
+        #print("dumping...")
         dataset = (class_dict, data)  
         pickle.dump(dataset, open(outfile, 'wb'))
-        print("dumped")
+        #print("dumped")
 
         return dataset
 

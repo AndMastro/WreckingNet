@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import librosa
 import librosa.display
 
-import os
 
 class Spectrum:
 
@@ -51,7 +50,7 @@ class Spectrum:
         if data.ndim > 1:
             # we have more than one channel, we have to do more plots
             for i in range(0, data.ndim):
-                dimension_data = data[:,i]
+                dimension_data = data[:, i]
                 out_path = out_name + "_channel_" + str(i) + "." + fmt
                 fig = Spectrum.plot_spectrogram(rate, dimension_data, NFFT, noverlap);
                 fig.savefig(out_path, format=fmt, frameon='false')
@@ -136,6 +135,8 @@ class Spectrum:
 # fft - fast fourier transform
 # =============================================================================
 # if __name__ == "__main__":
+#     import os
+#
 #     DATAPATH = "../dataset/segments"
 #     folders = os.listdir(DATAPATH)
 #     for folder in folders:
