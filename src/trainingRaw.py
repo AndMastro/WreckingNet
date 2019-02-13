@@ -4,7 +4,7 @@ import random
 import pickle
 
 from rawnet import rawCNN
-from Spectrum import Spectrum
+from Waver import Waver
 
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
@@ -26,34 +26,6 @@ def save(dataset, path):
     with open(path, 'wb') as fout:
         pickle.dump(dataset, fout)
 
-
-def read_dataset(src_path):
-    def _read_aux(path, one_hot):
-        ret = []
-        if (not os.path.isdir(path)) and path.endswith('.wav'):
-            val = (Spectrum.compute_specgram_and_delta(path), one_hot)
-            ret.append(val)
-        elif os.path.isdir(path):
-            folders = os.listdir(path)
-            for folder in folders:
-                ret += _read_aux(os.path.join(path, str(folder)), one_hot)
-        return ret
-
-    classes = os.listdir(src_path)
-    class_dict = dict()
-    class_id = 0
-    dataset = []
-    for class_type in classes:
-        print(class_type)
-        new_data = _read_aux(os.path.join(src_path, class_type), class_id)
-        print('class size is: ', len(new_data))
-        dataset = dataset+new_data
-        class_dict[class_type] = class_id
-        class_id = class_id + 1
-
-    return class_dict, dataset
-
-
 def get_samples_and_labels(data):
     X = []
     Y = []
@@ -63,34 +35,47 @@ def get_samples_and_labels(data):
     return X, Y
 
 if __name__ == "__main__":
+
     import matplotlib.pyplot as plt
     import numpy as np
 
-    dataset_path = '../dataset/waveforms'
-    dataset_path_get = '../dataset/segments'
+    train_dataset_path = '../dataset/wave_train_pickle'
+    train_dataset_path_get = '../dataset/segments/training'
 
-    batch_size = 8
-    epochs = 40
+    test_dataset_path = '../dataset/wave_test_pickle'
+    test_dataset_path_get = '../dataset/segments/testing'
 
-    # read data
-    dataset = load(dataset_path)
-    if dataset is None:
-        print('None data')
-        dataset = read_dataset(dataset_path_get)
-        save(dataset, dataset_path)
+    pickle_sample = '../dataset/data_train_pickle'
 
-    class_dict, data = dataset
-    random.shuffle(data)
+    batch_size = 4096
+    epochs = 10
+    learning_rate = 0.01
 
-    X, Y = get_samples_and_labels(data)
+    # read train data
+    train_set = load(train_dataset_path)
+    if train_set is None:
+        print("No Train data")
+        train_set = Waver.save_waves(train_dataset_path_get, train_dataset_path, pickle_sample, True)
+        save(train_set, train_dataset_path)
 
-    print(len(X))
-    split_size = int(len(X)*0.7)
+    class_train_dict, train_data = train_set
+    random.shuffle(train_data)
 
-    Xtrain = X[:split_size]
-    Ytrain = Y[:split_size]
-    Xtest = X[split_size:]
-    Ytest = Y[split_size:]
+    # read train data
+    test_set = load(test_dataset_path)
+    if test_set is None:
+        print("No Test data")
+        test_set = Waver.save_waves(test_dataset_path_get, test_dataset_path, pickle_sample, True)#read_dataset_test(test_dataset_path_get, class_train_dict)
+        save(test_set, test_dataset_path)
+
+    class_test_dict, test_data = test_set
+    random.shuffle(test_data)
+
+    Xtrain, Ytrain = get_samples_and_labels(train_data)
+    Xtest, Ytest = get_samples_and_labels(test_data)
+
+    print("Train size", len(Ytrain))
+    print("Test size", len(Ytest))
 
     Xtrain = tf.convert_to_tensor(Xtrain, dtype=tf.float32)
     Ytrain = tf.convert_to_tensor(Ytrain, dtype=tf.float32)
@@ -114,7 +99,7 @@ if __name__ == "__main__":
     def loss(net, x, y):
         return tf.losses.sparse_softmax_cross_entropy(logits=net(x, training=True), labels=y)
 
-    opt = tf.train.AdamOptimizer(learning_rate=0.0001) #it helps to go out the local minimum. with 0.0001 and 40 epochs ok. Must remove oscillations.
+    opt = tf.train.AdamOptimizer(learning_rate=learning_rate) #it helps to go out the local minimum. with 0.0001 and 40 epochs ok. Must remove oscillations.
 
 
     trainAcc = []

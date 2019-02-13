@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
     batch_size = 4096
     epochs = 10
-    learning_rate = 0.001
+    learning_rate = 0.01
 
     # read train data
     train_set = load(train_dataset_path)
@@ -211,4 +211,3 @@ if __name__ == "__main__":
 
     print(np.array(pred))
     print(np.array(true))
-    

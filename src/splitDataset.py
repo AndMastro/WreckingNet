@@ -30,8 +30,8 @@ def split_datasets(datapath, trainpath, testpath, perc=0.7):
             train_seg = audio[:int(perc*len(audio))]
             test_seg = audio[int(perc*len(audio)):]
 
-            out_trainpath =  os.path.join(trainpath, str(cat), str(track.split(".")[0]))
-            out_testpath =  os.path.join(testpath, str(cat), str(track.split(".")[0]))
+            out_trainpath = os.path.join(trainpath, str(cat))
+            out_testpath = os.path.join(testpath, str(cat))
 
             if not os.path.isdir(out_trainpath):
                 os.makedirs(out_trainpath)

@@ -16,7 +16,7 @@ import librosa
 import librosa.display
 
 class Waver:
-    
+    @staticmethod
     def get_waveform(path, sample_rate=22050, normalize=False):
         
         signal, _ = librosa.load(path, sr=sample_rate)
@@ -24,8 +24,9 @@ class Waver:
             signal = librosa.util.normalize(signal)
         
         return signal
-    
-    def save_waves(datapath, outfile, classfile):
+
+    @staticmethod
+    def save_waves(datapath, outfile, classfile, normalize=False):
         class_dict = {}
         data = []
         
@@ -45,7 +46,7 @@ class Waver:
                 trackpath = os.path.join(catpath, track)  
                 
                 for segment in os.listdir(trackpath):                    
-                    signal = Waver.get_waveform(os.path.join(trackpath, segment))
+                    signal = Waver.get_waveform(os.path.join(trackpath, segment), normalize=normalize)
                     data.append((signal, curl))
         
         print("dumping...")
@@ -53,6 +54,7 @@ class Waver:
         pickle.dump(dataset, open(outfile, 'wb'))
         print("dumped")
 
+        return dataset
 
 # =============================================================================
 if __name__ == "__main__":
