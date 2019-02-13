@@ -4,7 +4,7 @@ from pydub import AudioSegment
 from Spectrum import Spectrum
 
 
-def partition_track(track_path, out_path, ms, hop=None):
+def partition_track(track_path, out_path, ms, hop=None, threshold=1000):
 
     if hop is None:
         hop = ms
@@ -24,8 +24,24 @@ def partition_track(track_path, out_path, ms, hop=None):
     if not os.path.isdir(out_path):
         os.makedirs(out_path)
 
+    # =============================
+    #threshold = 0
+    #x = 0
+    #for el in segments:
+    #    threshold = threshold + el.rms
+    #    x = x+1
+
+    #threshold = threshold / x
+    # =============================
+    sil = AudioSegment.empty()
+
     for idx, segment in enumerate(segments):
+        if segment.rms < threshold:
+            sil = sil + segment
+            continue
         segment.export(os.path.join(out_path, str(str(idx) + "." + form)), format=form)
+
+    sil.export(os.path.join(out_path, 'sil.wav'), format=form)
 
 
 def partition_dataset(in_path, out_path, ms, hop):
@@ -33,9 +49,10 @@ def partition_dataset(in_path, out_path, ms, hop):
         print(out_path)
         # in_path is a file, create out_path and convert
         partition_track(in_path, str(out_path), ms, hop)
-        for segment in os.listdir(out_path):
-            seg_path = os.path.join(out_path, segment)
-            #Spectrum.get_specgram_librosa(seg_path)
+
+        #for segment in os.listdir(out_path):
+        #    seg_path = os.path.join(out_path, segment)
+        #    Spectrum.get_specgram_librosa(seg_path)
     else:
         folders = os.listdir(in_path)
         for folder in folders:
@@ -48,9 +65,9 @@ def partition_dataset(in_path, out_path, ms, hop):
 
 if __name__ == "__main__":
     import sys
-    DATAPATH = "../dataset/UtahAudioData"
+    DATAPATH = "../dataset/5Classes"
     OUT = "../dataset/segments"
-    AUDIOMS = 10000
-    HOPMS = 5000
+    AUDIOMS = 1000
+    HOPMS = 500
     partition_dataset(DATAPATH, OUT, AUDIOMS, HOPMS)
     sys.exit(0)
