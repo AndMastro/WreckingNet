@@ -1,9 +1,19 @@
-These samples are already processed with SVM:
+We didn't add any ArrayMic records.
+
+We don't know whether some classes are the same (In some cases we don't have the complete name of the veichle), we will consider them as different classes.
+
+These samples are already processed with SVM, so we ignore them:
 	Loader JD333E Compact, 
 	Bobcat 331 Excavator,
 
-Audios with more veichles are discared:
-	Komatsu PC 45 MR Excavator and JCB 225T Bulldozer 1 and 2
-	Komatsu PC 45 MR and PC200 Excavators
+Audios containing more veichles are discared - we can use them for testes:
+	Komatsu PC 45 MR Excavator and JCB 225T Bulldozer 1 and 2,
+	Komatsu PC 45 MR and PC200 Excavators,
 	
+These contains also the audio of the veichles separated (we took only the separated):
+	Komatsu PC200 Excavator and GEHL Telhandler,
+	CAT C5K Bulldozer and CAT 305E Excavator,
+	CAT Bulldozer and CAT CS44 Compactor,
+	Bomag Compactor and JD 544K Loader,
+	Bobcat Loader and Bobcat Excavator,
 	
