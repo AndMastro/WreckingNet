@@ -1,0 +1,9 @@
+These samples are already processed with SVM:
+	Loader JD333E Compact, 
+	Bobcat 331 Excavator,
+
+Audios with more veichles are discared:
+	Komatsu PC 45 MR Excavator and JCB 225T Bulldozer 1 and 2
+	Komatsu PC 45 MR and PC200 Excavators
+	
+	
