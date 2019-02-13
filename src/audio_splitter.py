@@ -8,12 +8,6 @@ Created on Thu Feb  7 20:41:42 2019
 from pydub import AudioSegment
 import os
 
-# =============================================================================
-# DATAPATH = "../dataset/UtahAudioData"
-# OUT = "../dataset/segments"
-# AUDIOMS = 30000
-# =============================================================================
-
 def partition_dataset(datapath, out, ms):
     
     cats = os.listdir(datapath)
@@ -34,9 +28,3 @@ def partition_dataset(datapath, out, ms):
                     
             for idx, segment in enumerate(segments):
                 segment.export(os.path.join(outpath, str(str(idx) + "." + form)), format=form)
-
-
-# =============================================================================
-# if __name__ == "__main__":
-#     partition_dataset(DATAPATH, OUT, AUDIOMS)
-# =============================================================================
