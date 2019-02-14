@@ -1,7 +1,7 @@
 We didn't add any ArrayMic records.
 
 We don't know whether some classes are the same (In some cases we don't have the complete name of the veichle), we will consider them as different classes.
-In other case, if the model specified is the same we consider them as members of the same class
+In other case, if the model specified is the same, we consider them as members of the same class
 
 These samples are already processed with SVM, so we ignore them:
 	Loader JD333E Compact, 
