@@ -57,7 +57,7 @@ def partition_dataset(in_path, out_path, ms, hop):
 
 if __name__ == "__main__":
     import sys
-    from splitDataset import split_datasets
+    from utils import split_datasets
 
     DATAPATH = "../dataset/5Classes"
     TRAINSEG = "../dataset/partitions/training"
