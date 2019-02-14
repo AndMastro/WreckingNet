@@ -2,4 +2,6 @@
 /dataset
 src/__pycache__
 src/.ipynb_checkpoints
+src/utilsMastro.py
+src/*.pyc
 *.wav
