@@ -55,11 +55,13 @@ def gen_dataset(src_path, class_dict):
 
 def get_samples_and_labels(data):
     X = []
+    Z = []
     Y = []
     for x,y in data:
-        X.append(x)
+        X.append(x[0])
+        Z.append(x[1])
         Y.append(y)
-    return X, Y
+    return X, Z, Y
 
 
 if __name__ == "__main__":
@@ -81,6 +83,9 @@ if __name__ == "__main__":
         c1 = tf.nn.softmax(c1)
         c2 = tf.nn.softmax(c2)
 
+        c1 = list(c1)
+        c2 = list(c2)
+
         return DSEvidence.get_joint_mass(c1, c2)
 
     class_train_dict, _ = load('../dataset/data_train_pickle')
@@ -93,14 +98,15 @@ if __name__ == "__main__":
 
     class_test_dict, test_data = test_set
 
-    Xtest, Ytest = get_samples_and_labels(test_data)
+    Xtest_raw, Xtest_spec, Ytest = get_samples_and_labels(test_data)
 
-    Xtest = tf.convert_to_tensor(Xtest, dtype=tf.float32)
+    Xtest_raw = tf.convert_to_tensor(Xtest_raw, dtype=tf.float32)
+    Xtest_spec = tf.convert_to_tensor(Xtest_spec, dtype=tf.float32)
     Ytest = tf.convert_to_tensor(Ytest, dtype=tf.float32)
 
     print("Allocationg tensors")
 
-    test_it = tf.data.Dataset.from_tensor_slices((Xtest, Ytest))
+    test_it = tf.data.Dataset.from_tensor_slices((Xtest_raw, Xtest_spec, Ytest))
 
     rawnet = rawCNN()
     spectronet = SpectroCNN()
@@ -108,17 +114,20 @@ if __name__ == "__main__":
 
     cnn = lambda x: _DScnn(x, rawnet, spectronet)
 
-    _ = cnn(test_it.batch(1)[0])
+    for x, z, yb in test_it.batch(1):
+        _ = cnn((x, z))
+        break
 
     rawnet.load_weights(raw_path)
-    spectronet.load(spectro_path)
+    spectronet.load_weights(spectro_path)
 
     print("Done")
 
-    def _parse_example(x, y):
+    def _parse_example(x, y, z):
         x = tf.cast(x, tf.float32)
-        y = tf.cast(y, tf.int32)
-        return x, y
+        y = tf.cast(z, tf.float32)
+        z = tf.cast(y, tf.int32)
+        return x, y, z
 
     test_it = test_it.map(_parse_example)
 
@@ -126,8 +135,8 @@ if __name__ == "__main__":
     true = []
 
     accTest = tfe.metrics.SparseAccuracy()
-    for xb, yb in test_it.batch(batch_size):
-        ypred = cnn(xb)
+    for x, z, yb in test_it.batch(batch_size):
+        ypred = cnn((x, z))
         accTest(predictions=ypred, labels=yb)
         to_append = [tf.argmax(x) for x in ypred]
         pred = pred + to_append

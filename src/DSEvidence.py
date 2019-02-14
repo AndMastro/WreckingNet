@@ -26,8 +26,9 @@ class DSEvidence:
         K = DSEvidence.k_coefficient(p1, p2)
         
         for i in range(n):
-            sums.append(round((p1[i]*p2[i])/K, 2))
+            print(p1[i], p2[i])
+            sums.append((p1[i]*p2[i])/K)
         
-        res = [round(x/sum(sums), 2) for x in sums]
+        res = [x/sum(sums) for x in sums]
                 
         return res
