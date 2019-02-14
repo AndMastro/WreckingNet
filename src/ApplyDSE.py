@@ -74,7 +74,7 @@ if __name__ == "__main__":
     test_dataset_path = '../dataset/DSE_pickle'
     test_dataset_path_get = '../dataset/segments/testing'
 
-    batch_size = 1024
+    batch_size = 512
 
     def _DScnn(x, rawnet, spectronet):
         c1 = rawnet(x[0])
@@ -99,6 +99,8 @@ if __name__ == "__main__":
     class_test_dict, test_data = test_set
 
     Xtest_raw, Xtest_spec, Ytest = get_samples_and_labels(test_data)
+
+    size = len(Ytest)
 
     Xtest_raw = tf.convert_to_tensor(Xtest_raw, dtype=tf.float32)
     Xtest_spec = tf.convert_to_tensor(Xtest_spec, dtype=tf.float32)
@@ -136,7 +138,12 @@ if __name__ == "__main__":
     pred = []
     true = []
 
+    print("Testing...")
+
+    size = size//batch_size + 1
+
     accTest = tfe.metrics.SparseAccuracy()
+    step = 0
     for x, z, yb in test_it.batch(batch_size):
         ypred = cnn((x, z))
         accTest(predictions=ypred, labels=yb)
@@ -144,7 +151,10 @@ if __name__ == "__main__":
         pred = pred + to_append
         true_append = [x for x in yb]
         true = true + true_append
-
+        step += 1
+        print("\r Step done ", step, "/ ", size, end="")
+    print("\r")
+    print("=======================")
     print('Test accuracy is {} %'.format(accTest.result().numpy() * 100))
 
     cf = tf.confusion_matrix(labels=true, predictions=pred)
