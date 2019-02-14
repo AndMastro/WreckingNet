@@ -111,22 +111,24 @@ if __name__ == "__main__":
     rawnet = rawCNN()
     spectronet = SpectroCNN()
 
-
-    cnn = lambda x: _DScnn(x, rawnet, spectronet)
-
     for x, z, yb in test_it.batch(1):
-        _ = cnn((x, z))
+        print(x.shape)
+        print(z.shape)
+        _ = rawnet(x)
+        _ = spectronet(z)
         break
 
     rawnet.load_weights(raw_path)
     spectronet.load_weights(spectro_path)
 
+    cnn = lambda x: _DScnn(x, rawnet, spectronet)
+
     print("Done")
 
     def _parse_example(x, y, z):
         x = tf.cast(x, tf.float32)
-        y = tf.cast(z, tf.float32)
-        z = tf.cast(y, tf.int32)
+        y = tf.cast(y, tf.float32)
+        z = tf.cast(z, tf.int32)
         return x, y, z
 
     test_it = test_it.map(_parse_example)
