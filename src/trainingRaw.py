@@ -39,6 +39,8 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
     import numpy as np
 
+    model_path = "../models/rawNet.h5"
+
     train_dataset_path = '../dataset/wave_train_pickle'
     train_dataset_path_get = '../dataset/segments/training'
 
@@ -160,3 +162,5 @@ if __name__ == "__main__":
 
     print(np.array(pred))
     print(np.array(true))
+
+    cnn.save_weights(model_path)

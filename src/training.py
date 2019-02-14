@@ -3,7 +3,7 @@ import os
 import random
 import pickle
 
-from DemoNet import SpectroCNN
+from spectronet import SpectroCNN
 from Spectrum import Spectrum
 
 import tensorflow as tf
@@ -87,6 +87,8 @@ def get_samples_and_labels(data):
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
     import numpy as np
+
+    model_path = "../models/spectroNet.h5"
 
     train_dataset_path = '../dataset/data_train_pickle'
     train_dataset_path_get = '../dataset/segments/training'
@@ -211,3 +213,5 @@ if __name__ == "__main__":
 
     print(np.array(pred))
     print(np.array(true))
+
+    cnn.save_weights(model_path)
