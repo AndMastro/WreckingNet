@@ -6,7 +6,7 @@ Created on Wed Feb 13 13:38:42 2019
 """
 
 class DSEvidence:
-    
+    @staticmethod
     def k_coefficient(p1, p2):
         assert len(p1) == len(p2)
         n = len(p1)
@@ -16,7 +16,8 @@ class DSEvidence:
             s += sum([x*p1[i] for x in (p2[:i] + p2[i+1:])])
         
         return s
-    
+
+    @staticmethod
     def get_joint_mass(p1, p2):
         assert len(p1) == len(p2)
         
