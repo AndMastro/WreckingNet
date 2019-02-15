@@ -74,7 +74,7 @@ if __name__ == "__main__":
     test_dataset_path = '../dataset/DSE_pickle'
     test_dataset_path_get = '../dataset/segments/testing'
 
-    batch_size = 512
+    batch_size = 1 #nun me tocca' se ci tieni alle mani
 
     def _DScnn(x, rawnet, spectronet):
         c1 = rawnet(x[0])
@@ -83,10 +83,12 @@ if __name__ == "__main__":
         c1 = tf.nn.softmax(c1)
         c2 = tf.nn.softmax(c2)
 
-        c1 = list(c1)
-        c2 = list(c2)
+        c1 = list(c1.numpy()[0])
+        c2 = list(c2.numpy()[0])
 
-        return DSEvidence.get_joint_mass(c1, c2)
+        out = DSEvidence.get_joint_mass(c1, c2)
+        out = tf.convert_to_tensor(out, dtype=tf.float32)
+        return tf.reshape(out, shape = [1, -1])
 
     class_train_dict, _ = load('../dataset/data_train_pickle')
 
@@ -155,8 +157,7 @@ if __name__ == "__main__":
         pred = pred + to_append
         true_append = [x for x in yb]
         true = true + true_append
-        print('Test accuracy at batch {} is {} %'.format(batch, accTest.result().numpy() * 100))
-        print("=================================")
+        print("\rBatch num: " + str(batch), end='')
         batch += 1
 
     print('Test accuracy is {} %'.format(accTest.result().numpy() * 100))

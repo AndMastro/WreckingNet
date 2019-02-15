@@ -96,9 +96,9 @@ if __name__ == "__main__":
     test_dataset_path = '../dataset/data_test_pickle'
     test_dataset_path_get = '../dataset/segments/testing'
 
-    batch_size = 4096
+    batch_size = 256
     epochs = 10
-    learning_rate = 0.001
+    learning_rate = 0.0001
 
     # read train data
     train_set = load(train_dataset_path)

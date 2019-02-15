@@ -65,8 +65,8 @@ if __name__ == "__main__":
 
     TrainOUT = "../dataset/segments/training"
     TestOUT = "../dataset/segments/testing"
-    AUDIOMS = 30
-    HOPMS = 15
+    AUDIOMS = 950
+    HOPMS = 475
 
     split_datasets(DATAPATH, TRAINSEG, TESTSEG)
     partition_dataset(TRAINSEG, TrainOUT, AUDIOMS, HOPMS)

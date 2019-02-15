@@ -5,16 +5,18 @@ Created on Wed Feb 13 13:38:42 2019
 @author: Ale
 """
 
+import numpy as np
+
 class DSEvidence:
     @staticmethod
     def k_coefficient(p1, p2):
         assert len(p1) == len(p2)
         n = len(p1)
         s = 0.0
-        
+
         for i in range(n):
             s += sum([x*p1[i] for x in (p2[:i] + p2[i+1:])])
-        
+
         return s
 
     @staticmethod
@@ -29,6 +31,7 @@ class DSEvidence:
             #print(p1[i], p2[i])
             sums.append((p1[i]*p2[i])/K)
         
-        res = [x/sum(sums) for x in sums]
-                
+        res = np.array([x/sum(sums) for x in sums], dtype=np.float32)
+
+        res.reshape(1, -1)
         return res

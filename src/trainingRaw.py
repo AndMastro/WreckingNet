@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     pickle_sample = '../dataset/data_train_pickle'
 
-    batch_size = 2048
+    batch_size = 128
     epochs = 10
     learning_rate = 0.001
 
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     if train_set is None:
         print("No Train data")
         train_set = Waver.save_waves(train_dataset_path_get, train_dataset_path, pickle_sample, True)
-        save(train_set, train_dataset_path)
+        #save(train_set, train_dataset_path)
 
     class_train_dict, train_data = train_set
     random.shuffle(train_data)
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     if test_set is None:
         print("No Test data")
         test_set = Waver.save_waves(test_dataset_path_get, test_dataset_path, pickle_sample, True)
-        save(test_set, test_dataset_path)
+        #save(test_set, test_dataset_path)
 
     class_test_dict, test_data = test_set
     random.shuffle(test_data)
