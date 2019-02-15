@@ -85,3 +85,46 @@ def partition_dataset(datapath, out, ms):
                     
             for idx, segment in enumerate(segments):
                 segment.export(os.path.join(outpath, str(str(idx) + "." + form)), format=form)
+
+def get_reduced_set(data, lens, mode='min'):
+    
+    assert (mode in ['min', 'all']) or (type(mode) == int and mode > 0)
+    
+    new_data = []
+    taken = {}
+    for c in lens:
+        taken[c] = 0
+    
+    if mode == 'min':        
+        max_samples = min([lens[x] for x in lens])
+    elif mode == 'all':
+        max_samples = len(data)
+    elif mode == 'avg':
+        max_samples = sum(lens.values())/len(lens)
+    else:
+        max_samples = mode
+    
+    for d in data:        
+        if taken[d[1]] >= max_samples:
+            continue
+        new_data.append(d)
+        taken[d[1]] += 1
+        
+    return new_data
+
+
+def get_class_numbers(data, classes):
+    
+    lens = {}
+    
+    inverse_classes= {}
+    for c in classes:
+        inverse_classes[classes[c]] = c
+    
+    for c in inverse_classes:
+        lens[c] = 0
+    
+    for d in data:
+        lens[d[1]] += 1
+        
+    return lens
