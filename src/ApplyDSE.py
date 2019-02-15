@@ -106,7 +106,7 @@ if __name__ == "__main__":
     Xtest_spec = tf.convert_to_tensor(Xtest_spec, dtype=tf.float32)
     Ytest = tf.convert_to_tensor(Ytest, dtype=tf.float32)
 
-    print("Allocationg tensors")
+    print("Allocating tensors")
 
     test_it = tf.data.Dataset.from_tensor_slices((Xtest_raw, Xtest_spec, Ytest))
 
@@ -120,8 +120,13 @@ if __name__ == "__main__":
         _ = spectronet(z)
         break
 
+    print("Loading weights for the rawNet")
     rawnet.load_weights(raw_path)
+    print("Done")
+    print("============================")
+    print("Loading weights for the spectroNet")
     spectronet.load_weights(spectro_path)
+    print("Done")
 
     cnn = lambda x: _DScnn(x, rawnet, spectronet)
 
@@ -140,8 +145,7 @@ if __name__ == "__main__":
 
     print("Testing...")
 
-    size = size//batch_size + 1
-
+    batch = 0
     accTest = tfe.metrics.SparseAccuracy()
     step = 0
     for x, z, yb in test_it.batch(batch_size):
@@ -151,12 +155,14 @@ if __name__ == "__main__":
         pred = pred + to_append
         true_append = [x for x in yb]
         true = true + true_append
-        step += 1
-        print("\r Step done ", step, "/ ", size, end="")
-    print("\r")
-    print("=======================")
+        print('Test accuracy at batch {} is {} %'.format(batch, accTest.result().numpy() * 100))
+        print("=================================")
+        batch += 1
+
     print('Test accuracy is {} %'.format(accTest.result().numpy() * 100))
 
+    print("=================================")
+    print("Generating confusion matrix")
     cf = tf.confusion_matrix(labels=true, predictions=pred)
     cf = np.array(cf)
 
