@@ -125,9 +125,10 @@ if __name__ == "__main__":
     print("Loading weights for the spectroNet")
     spectronet.load_weights(spectro_path)
     print("Done")
-
+    
+    
+    print("Initializing nets")
     cnn = lambda x: _DScnn(x, rawnet, spectronet)
-
     print("Done")
 
     def _parse_example(x, y, z):

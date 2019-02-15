@@ -5,9 +5,14 @@ import pickle
 
 from spectronet import SpectroCNN
 from Spectrum import Spectrum
+from utils import get_class_numbers, get_reduced_set
 
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
+
+BATCH_SIZE = 4096
+EPOCHS = 10
+LEARNING_RATE = 0.001
 
 tf.enable_eager_execution()
 
@@ -96,18 +101,19 @@ if __name__ == "__main__":
     test_dataset_path = '../dataset/data_test_pickle'
     test_dataset_path_get = '../dataset/segments/testing'
 
-    batch_size = 4096
-    epochs = 10
-    learning_rate = 0.001
+    batch_size = BATCH_SIZE
+    epochs = EPOCHS
+    learning_rate = LEARNING_RATE
 
     # read train data
     train_set = load(train_dataset_path)
     if train_set is None:
         print("No Train data")
         train_set = read_dataset(train_dataset_path_get)
-        save(train_set, train_dataset_path)
 
     class_train_dict, train_data = train_set
+    train_lens = get_class_numbers(train_data, class_train_dict)
+    train_data = get_reduced_set(train_data, train_lens, 'min')
     random.shuffle(train_data)
 
     # read train data
@@ -115,9 +121,10 @@ if __name__ == "__main__":
     if test_set is None:
         print("No Test data")
         test_set = read_dataset_test(test_dataset_path_get, class_train_dict)
-        save(test_set, test_dataset_path)
 
     class_test_dict, test_data = test_set
+    test_lens = get_class_numbers(test_data, class_test_dict)
+    test_data = get_reduced_set(test_data, test_lens, 'min')
     random.shuffle(test_data)
 
     Xtrain, Ytrain = get_samples_and_labels(train_data)
