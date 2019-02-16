@@ -76,7 +76,7 @@ if __name__ == "__main__":
     test_dataset_path = '../dataset/DSE_pickle'
     test_dataset_path_get = '../dataset/segments/testing'
 
-    batch_size = 16 #nun me tocca' se ci tieni alle mani
+    batch_size = 16
 
     def _DScnn(x, rawnet, spectronet):
         c1 = rawnet(x[0])

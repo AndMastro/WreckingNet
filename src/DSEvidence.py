@@ -37,17 +37,6 @@ class DSEvidence:
         res.reshape(1, -1)
         return res
 
-    """
-    @staticmethod
-    def tf_k_coefficient(t1, t2):
-        assert t1.shape == t2.shape
-
-        def _aux_k_coff(t):
-            return DSEvidence.k_coefficient(t[0], t[1])
-
-        return tf.map_fn(_aux_k_coff, elems=(t1, t2), dtype=tf.float32)
-    """
-
     @staticmethod
     def tf_get_joint_mass(t1, t2):
         assert t1.shape == t2.shape
