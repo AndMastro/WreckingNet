@@ -8,8 +8,8 @@ from utils import get_class_numbers, get_reduced_set
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
 
-BATCH_SIZE = 1024
-EPOCHS = 10
+BATCH_SIZE = 128
+EPOCHS = 20
 LEARNING_RATE = 0.001
 
 tf.enable_eager_execution()

@@ -7,9 +7,11 @@ import tensorflow.contrib.eager as tfe
 
 from Waver import Waver
 from Spectrum import Spectrum
+from utils import get_class_numbers, get_reduced_set
 
 import pickle
 import os
+import random
 
 tf.enable_eager_execution()
 
@@ -74,7 +76,7 @@ if __name__ == "__main__":
     test_dataset_path = '../dataset/DSE_pickle'
     test_dataset_path_get = '../dataset/segments/testing'
 
-    batch_size = 1 #nun me tocca' se ci tieni alle mani
+    batch_size = 16 #nun me tocca' se ci tieni alle mani
 
     def _DScnn(x, rawnet, spectronet):
         c1 = rawnet(x[0])
@@ -83,12 +85,9 @@ if __name__ == "__main__":
         c1 = tf.nn.softmax(c1)
         c2 = tf.nn.softmax(c2)
 
-        c1 = list(c1.numpy()[0])
-        c2 = list(c2.numpy()[0])
+        out = DSEvidence.tf_get_joint_mass(c1, c2)
 
-        out = DSEvidence.get_joint_mass(c1, c2)
-        out = tf.convert_to_tensor(out, dtype=tf.float32)
-        return tf.reshape(out, shape = [1, -1])
+        return out
 
     class_train_dict, _ = load('../dataset/data_train_pickle')
 
@@ -99,6 +98,9 @@ if __name__ == "__main__":
         save(test_set, test_dataset_path)
 
     class_test_dict, test_data = test_set
+    test_lens = get_class_numbers(test_data, class_test_dict)
+    test_data = get_reduced_set(test_data, test_lens, 'min')
+    random.shuffle(test_data)
 
     Xtest_raw, Xtest_spec, Ytest = get_samples_and_labels(test_data)
 

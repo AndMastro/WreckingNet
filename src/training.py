@@ -10,8 +10,8 @@ from utils import get_class_numbers, get_reduced_set
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
 
-BATCH_SIZE = 4096
-EPOCHS = 10
+BATCH_SIZE = 2048
+EPOCHS = 20
 LEARNING_RATE = 0.001
 
 tf.enable_eager_execution()
@@ -58,6 +58,7 @@ def read_dataset(src_path):
 
     return class_dict, dataset
 
+
 def read_dataset_test(src_path, class_dict):
     def _read_aux(path, one_hot):
         ret = []
@@ -81,6 +82,7 @@ def read_dataset_test(src_path, class_dict):
 
     return class_dict, dataset
 
+
 def get_samples_and_labels(data):
     X = []
     Y = []
@@ -88,6 +90,7 @@ def get_samples_and_labels(data):
         X.append(x)
         Y.append(y)
     return X, Y
+
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
