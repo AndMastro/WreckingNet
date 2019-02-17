@@ -1,0 +1,4 @@
+lr = 0.001
+batch_size = 4096
+epochs = 20
+gpu = gtx 1060
