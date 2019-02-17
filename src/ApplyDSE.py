@@ -7,8 +7,7 @@ import tensorflow.contrib.eager as tfe
 
 from Waver import Waver
 from Spectrum import Spectrum
-from utils import get_class_numbers, get_reduced_set, load, save, get_samples_and_labels
-
+from utils import get_class_numbers, get_reduced_set, load, save
 import pickle
 import os
 import random
@@ -38,6 +37,18 @@ def gen_dataset(src_path, class_dict):
         dataset = dataset+new_data
 
     return class_dict, dataset
+
+
+def get_samples_and_labels(data):
+    X = []
+    Z = []
+    Y = []
+    for x,y in data:
+        X.append(x[0])
+        Z.append(x[1])
+        Y.append(y)
+    return X, Z, Y
+
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
