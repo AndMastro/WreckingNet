@@ -128,7 +128,7 @@ if __name__ == "__main__":
         save(test_set, test_dataset_path)
 
     class_test_dict, test_data = test_set
-    random.shuffle(test_data)
+    random.shuffle(test_data) #should be here
     test_lens = get_class_numbers(test_data, class_test_dict)
     test_data = get_reduced_set(test_data, test_lens, 'min')
 
