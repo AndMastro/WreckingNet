@@ -1,5 +1,6 @@
 import random
 import pickle
+import sys
 
 from rawnet import rawCNN
 from Waver import Waver
@@ -8,7 +9,7 @@ from utils import get_class_numbers, get_reduced_set
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
 
-BATCH_SIZE = 128
+BATCH_SIZE = 1024
 EPOCHS = 20
 LEARNING_RATE = 0.001
 
@@ -76,9 +77,9 @@ if __name__ == "__main__":
         test_set = Waver.save_waves(test_dataset_path_get, test_dataset_path, pickle_sample, True)
 
     class_test_dict, test_data = test_set
+    random.shuffle(test_data)
     test_lens = get_class_numbers(test_data, class_test_dict)
     test_data = get_reduced_set(test_data, test_lens, 'min')
-    random.shuffle(test_data)
 
     Xtrain, Ytrain = get_samples_and_labels(train_data)
     Xtest, Ytest = get_samples_and_labels(test_data)
@@ -171,3 +172,5 @@ if __name__ == "__main__":
     print(np.array(true))
 
     cnn.save_weights(model_path)
+
+    sys.exit(0)

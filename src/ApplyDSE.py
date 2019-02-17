@@ -12,6 +12,7 @@ from utils import get_class_numbers, get_reduced_set
 import pickle
 import os
 import random
+import sys
 
 tf.enable_eager_execution()
 
@@ -160,7 +161,7 @@ if __name__ == "__main__":
         pred = pred + to_append
         true_append = [x for x in yb]
         true = true + true_append
-        print("\rBatch num: " + str(batch), end='')
+        print("Batch num: " + str(batch), end='\r', flush=True)
         batch += 1
 
     print('Test accuracy is {} %'.format(accTest.result().numpy() * 100))
@@ -179,4 +180,5 @@ if __name__ == "__main__":
     print(np.array(pred))
     print(np.array(true))
 
+    sys.exit(0)
 
