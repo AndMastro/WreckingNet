@@ -6,7 +6,9 @@ Created on Tue Feb 12 09:57:06 2019
 """
 
 from pydub import AudioSegment
+import pickle
 import os
+
 
 def split_datasets(datapath, trainpath, testpath, perc=0.7):
     
@@ -65,6 +67,7 @@ def split_datasets(datapath, trainpath, testpath, perc=0.7):
 
     return
 
+
 def partition_dataset(datapath, out, ms):
     
     cats = os.listdir(datapath)
@@ -85,6 +88,7 @@ def partition_dataset(datapath, out, ms):
                     
             for idx, segment in enumerate(segments):
                 segment.export(os.path.join(outpath, str(str(idx) + "." + form)), format=form)
+
 
 def get_reduced_set(data, lens, mode='min'):
     
@@ -128,3 +132,48 @@ def get_class_numbers(data, classes):
         lens[d[1]] += 1
         
     return lens
+
+
+def load(path):
+    """
+    :param path: str
+        path where to load the dataset
+    :return:
+        return the dataset saved in the pickle file
+        If the path doesn't exist return None
+    """
+    try:
+        with open(path, 'rb') as fin:
+            dataset = pickle.load(fin)
+    except Exception as e:
+        print(e)
+        dataset = None
+    return dataset
+
+
+def save(dataset, path):
+    """
+    :param dataset: Any
+        object to save inside the pickle file
+    :param path:
+        pathe where to create the pickle storing the object
+    :return:
+        None
+    """
+    with open(path, 'wb') as fout:
+        pickle.dump(dataset, fout)
+
+
+def get_samples_and_labels(data):
+    """
+    :param data: data to unpack
+    :return: X, Y:
+        X - list of objects to classify
+        Y - list of labels of the objects
+    """
+    X = []
+    Y = []
+    for x, y in data:
+        X.append(x)
+        Y.append(y)
+    return X, Y

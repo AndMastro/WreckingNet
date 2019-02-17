@@ -5,7 +5,7 @@ import pickle
 
 from spectronet import SpectroCNN
 from Spectrum import Spectrum
-from utils import get_class_numbers, get_reduced_set
+from utils import get_class_numbers, get_reduced_set, load, save, get_samples_and_labels
 
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
@@ -15,22 +15,6 @@ EPOCHS = 20
 LEARNING_RATE = 0.001
 
 tf.enable_eager_execution()
-
-
-def load(path):
-    try:
-        with open(path, 'rb') as fin:
-            dataset = pickle.load(fin)
-    except Exception as e:
-        print(e)
-        dataset = None
-    return dataset
-
-
-def save(dataset, path):
-    with open(path, 'wb') as fout:
-        pickle.dump(dataset, fout)
-
 
 def read_dataset(src_path):
     def _read_aux(path, one_hot):
@@ -83,15 +67,6 @@ def read_dataset_test(src_path, class_dict):
     return class_dict, dataset
 
 
-def get_samples_and_labels(data):
-    X = []
-    Y = []
-    for x,y in data:
-        X.append(x)
-        Y.append(y)
-    return X, Y
-
-
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
     import numpy as np
@@ -116,9 +91,9 @@ if __name__ == "__main__":
         save(train_set, train_dataset_path )
 
     class_train_dict, train_data = train_set
+    random.shuffle(train_data)
     train_lens = get_class_numbers(train_data, class_train_dict)
     train_data = get_reduced_set(train_data, train_lens, 'min')
-    random.shuffle(train_data)
 
     # read train data
     test_set = load(test_dataset_path)
@@ -144,7 +119,7 @@ if __name__ == "__main__":
     Xtest = tf.convert_to_tensor(Xtest, dtype=tf.float32)
     Ytest = tf.convert_to_tensor(Ytest, dtype=tf.float32)
 
-    print("Allocationg tensors")
+    print("Allocating tensors")
 
     train_it = tf.data.Dataset.from_tensor_slices((Xtrain, Ytrain))
     test_it = tf.data.Dataset.from_tensor_slices((Xtest, Ytest))

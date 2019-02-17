@@ -4,7 +4,7 @@ import sys
 
 from rawnet import rawCNN
 from Waver import Waver
-from utils import get_class_numbers, get_reduced_set
+from utils import get_class_numbers, get_reduced_set, load, get_samples_and_labels
 
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
@@ -14,31 +14,6 @@ EPOCHS = 20
 LEARNING_RATE = 0.001
 
 tf.enable_eager_execution()
-
-
-def load(path):
-    try:
-        with open(path, 'rb') as fin:
-            dataset = pickle.load(fin)
-    except Exception as e:
-        print(e)
-        dataset = None
-    return dataset
-
-
-def save(dataset, path):
-    with open(path, 'wb') as fout:
-        pickle.dump(dataset, fout)
-
-
-def get_samples_and_labels(data):
-    X = []
-    Y = []
-    for x, y in data:
-        X.append(x)
-        Y.append(y)
-    return X, Y
-
 
 if __name__ == "__main__":
 
@@ -66,9 +41,9 @@ if __name__ == "__main__":
         train_set = Waver.save_waves(train_dataset_path_get, train_dataset_path, pickle_sample, True)
 
     class_train_dict, train_data = train_set
+    random.shuffle(train_data)
     test_lens = get_class_numbers(train_data, class_train_dict)
     train_data = get_reduced_set(train_data, test_lens, 'min')
-    random.shuffle(train_data)
 
     # read train data
     test_set = load(test_dataset_path)
