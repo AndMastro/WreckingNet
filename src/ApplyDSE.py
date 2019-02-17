@@ -7,7 +7,7 @@ import tensorflow.contrib.eager as tfe
 
 from Waver import Waver
 from Spectrum import Spectrum
-from utils import get_class_numbers, get_reduced_set
+from utils import get_class_numbers, get_reduced_set, load, save, get_samples_and_labels
 
 import pickle
 import os
@@ -15,22 +15,6 @@ import random
 import sys
 
 tf.enable_eager_execution()
-
-
-def load(path):
-    try:
-        with open(path, 'rb') as fin:
-            dataset = pickle.load(fin)
-    except Exception as e:
-        print(e)
-        dataset = None
-    return dataset
-
-
-def save(dataset, path):
-    with open(path, 'wb') as fout:
-        pickle.dump(dataset, fout)
-
 
 def gen_dataset(src_path, class_dict):
     def _read_aux(path, one_hot):
@@ -54,18 +38,6 @@ def gen_dataset(src_path, class_dict):
         dataset = dataset+new_data
 
     return class_dict, dataset
-
-
-def get_samples_and_labels(data):
-    X = []
-    Z = []
-    Y = []
-    for x,y in data:
-        X.append(x[0])
-        Z.append(x[1])
-        Y.append(y)
-    return X, Z, Y
-
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
@@ -99,9 +71,9 @@ if __name__ == "__main__":
         save(test_set, test_dataset_path)
 
     class_test_dict, test_data = test_set
+    random.shuffle(test_data)
     test_lens = get_class_numbers(test_data, class_test_dict)
     test_data = get_reduced_set(test_data, test_lens, 'min')
-    random.shuffle(test_data)
 
     Xtest_raw, Xtest_spec, Ytest = get_samples_and_labels(test_data)
 
