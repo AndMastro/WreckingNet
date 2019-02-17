@@ -116,9 +116,9 @@ if __name__ == "__main__":
         save(train_set, train_dataset_path )
 
     class_train_dict, train_data = train_set
+    random.shuffle(train_data)
     train_lens = get_class_numbers(train_data, class_train_dict)
     train_data = get_reduced_set(train_data, train_lens, 'min')
-    random.shuffle(train_data)
 
     # read train data
     test_set = load(test_dataset_path)

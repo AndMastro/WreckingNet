@@ -66,9 +66,10 @@ if __name__ == "__main__":
         train_set = Waver.save_waves(train_dataset_path_get, train_dataset_path, pickle_sample, True)
 
     class_train_dict, train_data = train_set
+    random.shuffle(train_data)
     test_lens = get_class_numbers(train_data, class_train_dict)
     train_data = get_reduced_set(train_data, test_lens, 'min')
-    random.shuffle(train_data)
+   
 
     # read train data
     test_set = load(test_dataset_path)
