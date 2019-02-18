@@ -1,6 +1,7 @@
 import PickleGenerator
 from pydub import AudioSegment
 import os
+from PickleGenerator import partition_dataset
 
 #function to edit to correctly split the ds for the kFold
 def splitDataset(datapath, trainpath, testpath, k=5):
@@ -68,6 +69,19 @@ def splitDataset(datapath, trainpath, testpath, k=5):
 if __name__ == "__main__":
         
         print("Splitting datatset for k-fold...")
-        splitDataset("../dataset/5Classes", "../dataset/kFoldDataset/segments/training", "../dataset/kFoldDataset/segments/testing", 5)
+        splitDataset("../dataset/5Classes", "../dataset/kFoldDataset/partitions/training", "../dataset/kFoldDataset/partitions/testing", 5)
         print("Dataset generated.")
+
+        IN_PATH_TRAIN = "../dataset/kFoldDataset/partitions/training"
+        IN_PATH_TEST = "../dataset/kFoldDataset/partitions/testing"
+        OUT_PATH_TRAIN = "../dataset/kFoldDataset/segments/training"
+        OUT_PATH_TEST = "../dataset/kFoldDataset/segments/testing"
+        AUDIO_MS = 950
+        HOP_MS = 475
+        k = 5
+
+        for i in range(0,k):
+            partition_dataset(IN_PATH_TRAIN + str(i), OUT_PATH_TRAIN + str(i), AUDIO_MS, HOP_MS)
+            partition_dataset(IN_PATH_TEST + str(i), OUT_PATH_TEST + str(i), AUDIO_MS, HOP_MS)
+
     
