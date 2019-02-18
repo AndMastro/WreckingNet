@@ -9,6 +9,11 @@ from Waver import Waver
 from Spectrum import Spectrum
 from utils import save
 
+dataPath = "../dataset/5Classes"
+percSplit = 0.7
+audioMS = 30 #950
+audioHop = 15 #475
+
 def partition_track(track_path, out_path, ms, hop=None, get_drop=False):
     """
     :param track_path: str
@@ -160,10 +165,10 @@ if __name__ == "__main__":
 
     except Exception as e:
         print(e)
-        params['DATA_PATH'] = "../dataset/5Classes"
-        params['PERCENTAGE'] = 0.7
-        params['AUDIO_MS'] = 950 #30
-        params['HOP_MS'] = 475 #15
+        params['DATA_PATH'] = dataPath
+        params['PERCENTAGE'] = percSplit
+        params['AUDIO_MS'] = audioMS
+        params['HOP_MS'] = audioHop 
 
         params['SEG_ROOT'] = "../dataset/partitions" + str(int(params['PERCENTAGE'] * 100))
         params['TRAIN_SEG'] = params['SEG_ROOT'] + "/training"
