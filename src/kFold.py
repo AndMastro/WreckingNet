@@ -7,8 +7,8 @@ def splitDataset(datapath, trainpath, testpath, k=5):
     
 # =============================================================================
 # Cycle on all of the classes
-# =============================================================================
-    for i in range(0, k):
+# ============================================================================
+
         cats = os.listdir(datapath)
         
         for cat in cats:
@@ -35,26 +35,42 @@ def splitDataset(datapath, trainpath, testpath, k=5):
     # =============================================================================
     # Allocate the predefined portions of audio to two different files
     # =============================================================================
-                train_seg = audio[:int(perc*len(audio))]
-                test_seg = audio[int(perc*len(audio)):]
+    #the arrays contain the train and test for the 5 different folds
+                trainPortions = []
+                testPortions = []
+                testSize = int(len(audio)/k)
+                #testPortions.append(audio[:testSize])
+                #trainPortions.append(audio[testSize:])
+                fold = 0
+                for i in range(0,testSize*k,testSize):
+                    testTrack = audio[i:i+testSize]
+                    trainTrack = audio[0:i] + audio[i+testSize:len(audio)]
+
+                
 
     # =============================================================================
     # Create the new audio files and the folders to save them in
     # =============================================================================
-                out_trainpath = os.path.join(trainpath, str(cat))
-                out_testpath = os.path.join(testpath, str(cat))
+                    out_trainpath = os.path.join(trainpath + str(fold), str(cat))
+                    out_testpath = os.path.join(testpath + str(fold), str(cat))
 
-                if not os.path.isdir(out_trainpath):
-                    os.makedirs(out_trainpath)
-                
-                train_seg.export(os.path.join(out_trainpath, track), format=form) # export training partition
-                
-                if not os.path.isdir(out_testpath):
-                    os.makedirs(out_testpath)
-                
-                test_seg.export(os.path.join(out_testpath, track), format=form) # export test partition
+                    if not os.path.isdir(out_trainpath):
+                        os.makedirs(out_trainpath)
+                    
+                    trainTrack.export(os.path.join(out_trainpath, track), format=form) # export training partition
+                    
+                    if not os.path.isdir(out_testpath):
+                        os.makedirs(out_testpath)
+                    
+                    testTrack.export(os.path.join(out_testpath, track), format=form) # export test partition
 
-    return
+                    fold += 1
 
-#if __name__ == "__main__":
+        return
+
+if __name__ == "__main__":
+        
+        print("Splitting datatset for k-fold...")
+        splitDataset("../dataset/5Classes", "../dataset/kFoldDataset/segments/training", "../dataset/kFoldDataset/segments/testing", 5)
+        print("Dataset generated.")
     
