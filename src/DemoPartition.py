@@ -181,14 +181,6 @@ def generate_config(config_path='config.json', dataset_path=dataPath, percentage
         params['AUDIO_MS'] = audio_ms
         params['HOP_MS'] = audio_hop
 
-    params['SEG_ROOT'] = "../dataset/partitions" + str(int(params['PERCENTAGE'] * 100))
-    params['TRAIN_SEG'] = params['SEG_ROOT'] + "/training"
-    params['TEST_SEG'] = params['SEG_ROOT'] + "/testing"
-
-    params['OUT_ROOT'] = "../dataset/segments_ms" + str(params['AUDIO_MS']) + "_hop" + str(params['HOP_MS'])
-    params['TRAIN_OUT'] = params['OUT_ROOT'] + "/training"
-    params['TEST_OUT'] = params['OUT_ROOT'] + "/testing"
-
     params['PICKLES_FOLDER'] = "../dataset/pickles/ms" + str(params['AUDIO_MS']) + "_hop" + str(params['HOP_MS'])
     params['TRAIN_PICKLE'] = params['PICKLES_FOLDER'] + "/train.p"
     params['TEST_PICKLE'] = params['PICKLES_FOLDER'] + "/test.p"
@@ -212,18 +204,18 @@ if __name__ == "__main__":
     AUDIO_MS = params['AUDIO_MS']
     HOP_MS = params['HOP_MS']
 
-    SEG_ROOT = params['SEG_ROOT']
-    TRAIN_SEG = params['TRAIN_SEG']
-    TEST_SEG = params['TEST_SEG']
-
-    OUT_ROOT = params['OUT_ROOT']
-    TRAIN_OUT = params['TRAIN_OUT']
-    TEST_OUT = params['TEST_OUT']
-
     PICKLES_FOLDER = params['PICKLES_FOLDER']
     TRAIN_PICKLE = params['TRAIN_PICKLE']
     TEST_PICKLE = params['TEST_PICKLE']
     DICT_JSON = params['DICT_JSON']
+
+    SEG_ROOT = "../dataset/partitions" + str(int(params['PERCENTAGE'] * 100))
+    TRAIN_SEG = SEG_ROOT + "/training"
+    TEST_SEG = SEG_ROOT + "/testing"
+
+    OUT_ROOT = "../dataset/segments_ms" + str(params['AUDIO_MS']) + "_hop" + str(params['HOP_MS'])
+    TRAIN_OUT = OUT_ROOT + "/training"
+    TEST_OUT = OUT_ROOT + "/testing"
 
     with open("config.json", mode='w+', encoding='utf-8') as fout:
         json.dump(params, fout)

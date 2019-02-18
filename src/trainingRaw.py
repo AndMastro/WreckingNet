@@ -7,7 +7,7 @@ import tensorflow as tf
 import tensorflow.contrib.eager as tfe
 
 from rawnet import rawCNN
-from DemoPartition import get_samples_and_labels
+from DemoPartition import get_samples_and_labels, generate_config
 from utils import get_class_numbers, get_reduced_set, load
 
 BATCH_SIZE = 128
@@ -158,9 +158,11 @@ if __name__ == "__main__":
     cf = tf.confusion_matrix(labels=true, predictions=pred)
     cf = np.array(cf)
 
+    cf_n = cf.astype('float') / cf.sum(axis=1)[:, np.newaxis]
+
     print(cf)
 
-    plt.matshow(cf)
+    plt.matshow(cf_n)
     plt.colorbar()
     plt.show()
 
