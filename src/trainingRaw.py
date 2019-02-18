@@ -1,10 +1,11 @@
 import random
-import pickle
+import json
 import sys
+import os
 
 from rawnet import rawCNN
-from Waver import Waver
-from utils import get_class_numbers, get_reduced_set, load, get_samples_and_labels
+from DemoPartition import get_samples_and_labels
+from utils import get_class_numbers, get_reduced_set, load
 
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
@@ -20,44 +21,64 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
     import numpy as np
 
-    model_path = "../models/rawNet.h5"
+    try:
+        with open('config.json', mode='r', encoding='utf-8') as fin:
+            params = json.load(fin)
+    except Exception as e:
+        print(e)
+        print("No config file, aborting...")
+        sys.exit(0)
 
-    train_dataset_path = '../dataset/wave_train_pickle'
-    train_dataset_path_get = '../dataset/segments/training'
+    params['RAW_MODEL_PATH'] = params.get('RAW_MODEL_PATH', '../models/' + str(params['AUDIO_MS']) + '/raw.h5')
+    if not os.path.isdir('../models/' + str(params['AUDIO_MS'])):
+        os.makedirs('../models/' + str(params['AUDIO_MS']))
 
-    test_dataset_path = '../dataset/wave_test_pickle'
-    test_dataset_path_get = '../dataset/segments/testing'
+    with open('config.json', mode='w+', encoding='utf-8') as fout:
+        json.dump(params, fout)
 
-    pickle_sample = '../dataset/data_train_pickle'
+    model_path = params['RAW_MODEL_PATH']
+    train_dataset_path = params['TRAIN_PICKLE']
+    test_dataset_path = params['TEST_PICKLE']
 
     batch_size = BATCH_SIZE
     epochs = EPOCHS
     learning_rate = LEARNING_RATE
 
+    batch_size = BATCH_SIZE
+    epochs = EPOCHS
+    learning_rate = LEARNING_RATE
+
+    try:
+        with open(params['DICT_JSON'], mode='r', encoding='utf-8') as fin:
+            class_dict = json.load(fin)
+    except Exception as e:
+        print(e)
+        print("We have lost correpsondances, aborting...")
+        sys.exit(0)
+
     # read train data
     train_set = load(train_dataset_path)
     if train_set is None:
-        print("No Train data")
-        train_set = Waver.save_waves(train_dataset_path_get, train_dataset_path, pickle_sample, True)
-
-    class_train_dict, train_data = train_set
-    random.shuffle(train_data)
-    test_lens = get_class_numbers(train_data, class_train_dict)
-    train_data = get_reduced_set(train_data, test_lens, 'min')
+        print("No Train data, aborting...")
+        sys.exit(0)
 
     # read train data
     test_set = load(test_dataset_path)
     if test_set is None:
-        print("No Test data")
-        test_set = Waver.save_waves(test_dataset_path_get, test_dataset_path, pickle_sample, True)
+        print("No Test data, aborting...")
+        sys.exit(0)
 
-    class_test_dict, test_data = test_set
-    random.shuffle(test_data)
-    test_lens = get_class_numbers(test_data, class_test_dict)
-    test_data = get_reduced_set(test_data, test_lens, 'min')
+    random.shuffle(train_set)
+    random.shuffle(test_set)  # should be here
 
-    Xtrain, Ytrain = get_samples_and_labels(train_data)
-    Xtest, Ytest = get_samples_and_labels(test_data)
+    train_lens = get_class_numbers(train_set, class_dict)
+    train_data = get_reduced_set(train_set, train_lens, 'min')
+
+    test_lens = get_class_numbers(test_set, class_dict)
+    test_data = get_reduced_set(test_set, test_lens, 'min')
+
+    Xtrain, _, Ytrain = get_samples_and_labels(train_data)
+    Xtest, _, Ytest = get_samples_and_labels(test_data)
 
     print("Train size", len(Ytrain))
     print("Test size", len(Ytest))

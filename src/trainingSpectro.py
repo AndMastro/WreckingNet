@@ -1,12 +1,10 @@
 import sys
 import os
 import random
-import pickle
 import json
 
 from spectronet import SpectroCNN
-from Spectrum import Spectrum
-from utils import get_class_numbers, get_reduced_set, load, save
+from utils import get_class_numbers, get_reduced_set, load
 from DemoPartition import get_samples_and_labels
 
 import tensorflow as tf
