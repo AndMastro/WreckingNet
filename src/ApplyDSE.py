@@ -9,7 +9,7 @@ from rawnet import rawCNN
 from spectronet import SpectroCNN
 from DSEvidence import DSEvidence
 
-from DemoPartition import get_samples_and_labels
+from PickleGenerator import get_samples_and_labels
 from utils import get_class_numbers, get_reduced_set, load
 
 tf.enable_eager_execution()

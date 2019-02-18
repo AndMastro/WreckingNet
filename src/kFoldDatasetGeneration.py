@@ -1,4 +1,4 @@
-import DemoPartition
+import PickleGenerator
 from pydub import AudioSegment
 import os
 

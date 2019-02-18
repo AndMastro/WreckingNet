@@ -7,7 +7,7 @@ import tensorflow as tf
 import tensorflow.contrib.eager as tfe
 
 from rawnet import rawCNN
-from DemoPartition import get_samples_and_labels, generate_config
+from PickleGenerator import get_samples_and_labels, generate_config
 from utils import get_class_numbers, get_reduced_set, load
 
 BATCH_SIZE = 128
