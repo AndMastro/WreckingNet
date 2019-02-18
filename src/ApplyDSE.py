@@ -1,4 +1,3 @@
-import os
 import random
 import sys
 import json
@@ -10,9 +9,7 @@ from DSEvidence import DSEvidence
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
 
-from Waver import Waver
-from Spectrum import Spectrum
-from utils import get_class_numbers, get_reduced_set, load, save
+from utils import get_class_numbers, get_reduced_set, load
 from DemoPartition import get_samples_and_labels
 
 tf.enable_eager_execution()
@@ -67,7 +64,7 @@ if __name__ == "__main__":
         return out
 
     Xtest_raw, Xtest_spec, Ytest = get_samples_and_labels(test_data)
-    
+
     size = len(Ytest)
 
     Xtest_raw = tf.convert_to_tensor(Xtest_raw, dtype=tf.float32)
@@ -95,8 +92,7 @@ if __name__ == "__main__":
     print("Loading weights for the spectroNet")
     spectronet.load_weights(spectro_path)
     print("Done")
-    
-    
+
     print("Initializing nets")
     cnn = lambda x: _DScnn(x, rawnet, spectronet)
     print("Done")

@@ -28,7 +28,7 @@ if __name__ == "__main__":
         print("No config file, aborting...")
         sys.exit(0)
 
-    params['SPECTRUM_MODEL_PATH'] = params.get('SPECTRUM_MODEL_PATH', '../models/'+str(params['AUDIO_MS'])+'/specto.h5')
+    params['SPECTRUM_MODEL_PATH'] = params.get('SPECTRUM_MODEL_PATH', '../models/'+str(params['AUDIO_MS'])+'/spectro.h5')
     if not os.path.isdir('../models/'+str(params['AUDIO_MS'])):
         os.makedirs('../models/'+str(params['AUDIO_MS']))
 
