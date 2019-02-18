@@ -10,9 +10,9 @@ from rawnet import rawCNN
 from PickleGenerator import get_samples_and_labels
 from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matrix
 
-BATCH_SIZE = 128
+BATCH_SIZE = 1024
 EPOCHS = 20
-LEARNING_RATE = 0.00005
+LEARNING_RATE = 0.0005
 
 tf.enable_eager_execution()
 
@@ -161,5 +161,7 @@ if __name__ == "__main__":
     print(cf)
 
     plot_confusion_matrix(cf, class_dict)
+
+    cnn.save_weights(model_path)
 
     sys.exit(0)

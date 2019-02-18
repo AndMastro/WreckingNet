@@ -240,3 +240,4 @@ def plot_confusion_matrix(cm, class_dict,
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.tight_layout()
+    plt.show()

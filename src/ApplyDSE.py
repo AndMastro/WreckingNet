@@ -14,7 +14,7 @@ from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matri
 
 tf.enable_eager_execution()
 
-BATCH_SIZE = 128
+BATCH_SIZE = 2048
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt

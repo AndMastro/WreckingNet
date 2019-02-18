@@ -11,7 +11,7 @@ from PickleGenerator import get_samples_and_labels
 from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matrix
 
 
-BATCH_SIZE = 1024
+BATCH_SIZE = 4096
 EPOCHS = 20
 LEARNING_RATE = 0.001
 
@@ -161,5 +161,7 @@ if __name__ == "__main__":
     print(cf)
 
     plot_confusion_matrix(cf, class_dict)
+
+    cnn.save_weights(model_path)
 
     sys.exit(0)
