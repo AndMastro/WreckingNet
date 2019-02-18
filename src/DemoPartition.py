@@ -9,6 +9,11 @@ from Waver import Waver
 from Spectrum import Spectrum
 from utils import save
 
+dataPath = "../dataset/5Classes"
+percSplit = 0.7
+audioMS = 30
+audioHop = 15
+
 
 def partition_track(track_path, out_path, ms, hop=None, get_drop=False):
     """
@@ -149,35 +154,58 @@ def get_samples_and_labels(data):
     return X, Z, Y
 
 
+def generate_config(config_path='config.json', dataset_path=dataPath, percentage=percSplit, audio_ms=audioMS, audio_hop=audioHop, overwrite=False):
+    """
+    :param config_path: str
+        path to config file
+    :param dataset_path: str
+        path to dataset root
+    :param percentage:
+
+    :param audio_ms:
+    :param audio_hop:
+    :param overwrite: bool
+        whether to overwrite the old config with the new one
+    :return: dict
+        param dict
+    """
+    params = dict()
+
+    try:
+        with open(config_path, mode = 'r', encoding='utf-8') as fin:
+            params = json.load(fin)
+    except Exception as e:
+        print(e)
+        params['DATA_PATH'] = dataset_path
+        params['PERCENTAGE'] = percentage
+        params['AUDIO_MS'] = audio_ms
+        params['HOP_MS'] = audio_hop
+
+    params['SEG_ROOT'] = "../dataset/partitions" + str(int(params['PERCENTAGE'] * 100))
+    params['TRAIN_SEG'] = params['SEG_ROOT'] + "/training"
+    params['TEST_SEG'] = params['SEG_ROOT'] + "/testing"
+
+    params['OUT_ROOT'] = "../dataset/segments_ms" + str(params['AUDIO_MS']) + "_hop" + str(params['HOP_MS'])
+    params['TRAIN_OUT'] = params['OUT_ROOT'] + "/training"
+    params['TEST_OUT'] = params['OUT_ROOT'] + "/testing"
+
+    params['PICKLES_FOLDER'] = "../dataset/pickles/ms" + str(params['AUDIO_MS']) + "_hop" + str(params['HOP_MS'])
+    params['TRAIN_PICKLE'] = params['PICKLES_FOLDER'] + "/train.p"
+    params['TEST_PICKLE'] = params['PICKLES_FOLDER'] + "/test.p"
+    params['DICT_JSON'] = params['PICKLES_FOLDER'] + "/classes.json"
+
+    if overwrite:
+        with open(config_path, mode='w+', encoding='utf-8') as fout:
+            json.dump(params, fout)
+
+    return params
+
+
 if __name__ == "__main__":
     import sys
     from utils import split_datasets
 
-    params = dict()
-
-    try:
-        with open("config.json", mode='r', encoding='utf-8') as fin:
-            params = json.load(fin)
-
-    except Exception as e:
-        print(e)
-        params['DATA_PATH'] = "../dataset/5Classes"
-        params['PERCENTAGE'] = 0.7
-        params['AUDIO_MS'] = 950 #30
-        params['HOP_MS'] = 475 #15
-
-        params['SEG_ROOT'] = "../dataset/partitions" + str(int(params['PERCENTAGE'] * 100))
-        params['TRAIN_SEG'] = params['SEG_ROOT'] + "/training"
-        params['TEST_SEG'] = params['SEG_ROOT'] + "/testing"
-
-        params['OUT_ROOT'] = "../dataset/segments_ms" + str(params['AUDIO_MS']) + "_hop" + str(params['HOP_MS'])
-        params['TRAIN_OUT'] = params['OUT_ROOT'] + "/training"
-        params['TEST_OUT'] = params['OUT_ROOT'] + "/testing"
-
-        params['PICKLES_FOLDER'] = "../dataset/pickles/ms" + str(params['AUDIO_MS']) + "_hop" + str(params['HOP_MS'])
-        params['TRAIN_PICKLE'] = params['PICKLES_FOLDER'] + "/train.p"
-        params['TEST_PICKLE'] = params['PICKLES_FOLDER'] + "/test.p"
-        params['DICT_JSON'] = params['PICKLES_FOLDER'] + "/classes.json"
+    params = generate_config(overwrite=True)
 
     DATA_PATH = params['DATA_PATH']
     PERCENTAGE = params['PERCENTAGE']
@@ -199,6 +227,19 @@ if __name__ == "__main__":
 
     with open("config.json", mode='w+', encoding='utf-8') as fout:
         json.dump(params, fout)
+
+    # check whether we have to regenerate them
+    if os.path.exists(TRAIN_PICKLE) and os.path.exists(TEST_PICKLE) and os.path.exists(DICT_JSON):
+        print("Data already exist, if you wanted to change try one or all of this: \n"
+              "\t- delete config.json\n"
+              "\t- delete one of: "+ str(TRAIN_PICKLE)+ ", "+ str(TEST_PICKLE)+", "+ str(DICT_JSON) + "\n"
+              "then run me again")
+        sys.exit(0)
+    else:
+        print("Generating data for: ")
+        print("Percentage: ", params['PERCENTAGE'])
+        print("MS: ", params['AUDIO_MS'])
+        print("HOP: ", params['HOP_MS'])
 
     # this part is quite fast we can afford to do every time
     # we will treat the folders as tmp
