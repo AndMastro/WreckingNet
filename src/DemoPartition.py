@@ -1,10 +1,28 @@
 import os
-
-from pydub import AudioSegment
+import json
+import shutil
+import random
 import numpy as np
 
+from pydub import AudioSegment
+from Waver import Waver
+from Spectrum import Spectrum
+from utils import save
 
 def partition_track(track_path, out_path, ms, hop=None, get_drop=False):
+    """
+    :param track_path: str
+        path of the track to partition
+    :param out_path: str
+        directory in which save the chuncks, if it do not exist it is created
+    :param ms: int
+        duration of the chunk to generate
+    :param hop: int
+        step to start next chunck
+    :param get_drop: bool
+        generate a track with the discarded audio
+    :return: None
+    """
 
     if hop is None:
         hop = ms
@@ -43,6 +61,17 @@ def partition_track(track_path, out_path, ms, hop=None, get_drop=False):
 
 
 def partition_dataset(in_path, out_path, ms, hop):
+    """
+    :param in_path: str
+        root of the dataset where to start
+    :param out_path: str
+        root of the new dataset
+    :param ms: int
+        length of the chuncks
+    :param hop: int
+        ms after start next chunck
+    :return:
+    """
     if not os.path.isdir(in_path):
         print(out_path)
         partition_track(in_path, str(out_path), ms, hop)
@@ -55,20 +84,144 @@ def partition_dataset(in_path, out_path, ms, hop):
             partition_dataset(new_in_path, new_out_path, ms, hop)
 
 
+def gen_dataset(src_path, class_dict=None):
+    """
+    :param src_path: STR
+        root of the dataset to read
+    :param class_dict: dict
+        dict with the correspondence name-labels
+    :return: dict, Object
+        return a dict with the classes correspondence,
+        and a list of (Objects, label)
+    """
+
+    def _read_aux(path, label):
+        ret = []
+        if (not os.path.isdir(path)) and path.endswith('.wav'):
+            val = (Waver.get_waveform(path), Spectrum.compute_specgram_and_delta(path), label)
+            ret.append(val)
+        elif os.path.isdir(path):
+            folders = os.listdir(path)
+            for folder in folders:
+                ret += _read_aux(os.path.join(path, str(folder)), label)
+        return ret
+
+    if class_dict is None:
+        ret_dict = {}
+        class_id = -1
+    else:
+        ret_dict = class_dict
+
+    classes = os.listdir(src_path)
+    dataset = []
+    for class_type in classes:
+        if class_dict is None:
+            class_id += 1
+            ret_dict[class_type] = class_id
+        else:
+            class_id = class_dict[class_type]
+        print(class_type)
+        new_data = _read_aux(os.path.join(src_path, class_type), class_id)
+        random.shuffle(new_data)
+        print('class size is: ', len(new_data))
+        dataset = dataset+new_data
+
+    random.shuffle(dataset)
+    return ret_dict, dataset
+
+
+def get_samples_and_labels(data):
+    """
+    :param data: data to unpack
+    :return: X, Z, Y:
+        X - list of objects to classify
+        Z - secondary list of objects to classify
+        Y - list of labels of the objects
+    """
+    X = []
+    Z = []
+    Y = []
+    for x, z, y in data:
+        X.append(x)
+        Z.append(z)
+        Y.append(y)
+    return X, Z, Y
+
+
 if __name__ == "__main__":
     import sys
     from utils import split_datasets
 
-    DATAPATH = "../dataset/5Classes"
-    TRAINSEG = "../dataset/partitions/training"
-    TESTSEG = "../dataset/partitions/testing"
+    params = dict()
 
-    TrainOUT = "../dataset/segments/training"
-    TestOUT = "../dataset/segments/testing"
-    AUDIOMS = 30 # 950
-    HOPMS = 15 # 475
+    try:
+        with open("config.json", mode='r', encoding='utf-8') as fin:
+            params = json.load(fin)
 
-    split_datasets(DATAPATH, TRAINSEG, TESTSEG)
-    partition_dataset(TRAINSEG, TrainOUT, AUDIOMS, HOPMS)
-    partition_dataset(TESTSEG, TestOUT, AUDIOMS, HOPMS)
+    except Exception as e:
+        print(e)
+        params['DATA_PATH'] = "../dataset/5Classes"
+        params['PERCENTAGE'] = 0.7
+        params['AUDIO_MS'] = 950
+        params['HOP_MS'] = 475
+
+        params['SEG_ROOT'] = "../dataset/partitions" + str(int(params['PERCENTAGE'] * 100))
+        params['TRAIN_SEG'] = params['SEG_ROOT'] + "/training"
+        params['TEST_SEG'] = params['SEG_ROOT'] + "/testing"
+
+        params['OUT_ROOT'] = "../dataset/segments_ms" + str(params['AUDIO_MS']) + "_hop" + str(params['HOP_MS'])
+        params['TRAIN_OUT'] = params['OUT_ROOT'] + "/training"
+        params['TEST_OUT'] = params['OUT_ROOT'] + "/testing"
+
+        params['PICKLES_FOLDER'] = "../dataset/pickles/ms" + str(params['AUDIO_MS']) + "_hop" + str(params['HOP_MS'])
+        params['TRAIN_PICKLE'] = params['PICKLES_FOLDER'] + "/train.p"
+        params['TEST_PICKLE'] = params['PICKLES_FOLDER'] + "/test.p"
+        params['DICT_JSON'] = params['PICKLES_FOLDER'] + "/classes.json"
+
+    DATA_PATH = params['DATA_PATH']
+    PERCENTAGE = params['PERCENTAGE']
+    AUDIO_MS = params['AUDIO_MS']
+    HOP_MS = params['HOP_MS']
+
+    SEG_ROOT = params['SEG_ROOT']
+    TRAIN_SEG = params['TRAIN_SEG']
+    TEST_SEG = params['TEST_SEG']
+
+    OUT_ROOT = params['OUT_ROOT']
+    TRAIN_OUT = params['TRAIN_OUT']
+    TEST_OUT = params['TEST_OUT']
+
+    PICKLES_FOLDER = params['PICKLES_FOLDER']
+    TRAIN_PICKLE = params['TRAIN_PICKLE']
+    TEST_PICKLE = params['TEST_PICKLE']
+    DICT_JSON = params['DICT_JSON']
+
+    with open("config.json", mode='w+', encoding='utf-8') as fout:
+        json.dump(params, fout)
+
+    # this part is quite fast we can afford to do every time
+    # we will treat the folders as tmp
+    split_datasets(DATA_PATH, TRAIN_SEG, TEST_SEG, perc=PERCENTAGE)
+    partition_dataset(TRAIN_SEG, TRAIN_OUT, AUDIO_MS, HOP_MS)
+    partition_dataset(TEST_SEG, TEST_OUT, AUDIO_MS, HOP_MS)
+
+    # generate the pickle pickle pickle yeah
+    classes_dict, train_data = gen_dataset(TRAIN_OUT)
+
+    if not os.path.isdir(PICKLES_FOLDER):
+        os.makedirs(PICKLES_FOLDER)
+
+    save(train_data, TRAIN_PICKLE)
+    with open(DICT_JSON, mode='w+', encoding='utf-8') as fout:
+        json.dump(classes_dict, fout)
+
+    classes_dict, test_data = gen_dataset(TEST_OUT, classes_dict)
+    save(test_data, TEST_PICKLE)
+
+    # delete temp folders
+    print("Deleting folder: ", SEG_ROOT)
+    shutil.rmtree(SEG_ROOT)  # TRAIN_SEG, TEST_SEG
+    print("Deleting folder: ", OUT_ROOT)
+    shutil.rmtree(OUT_ROOT)  # TRAIN_OUT, TEST_OUT
+
     sys.exit(0)

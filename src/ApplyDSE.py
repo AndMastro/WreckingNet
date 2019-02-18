@@ -8,12 +8,12 @@ import tensorflow.contrib.eager as tfe
 from Waver import Waver
 from Spectrum import Spectrum
 from utils import get_class_numbers, get_reduced_set, load, save
-import pickle
 import os
 import random
 import sys
 
 tf.enable_eager_execution()
+
 
 def gen_dataset(src_path, class_dict):
     def _read_aux(path, one_hot):
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     test_dataset_path = '../dataset/DSE_pickle'
     test_dataset_path_get = '../dataset/segments/testing'
 
-    batch_size = 16
+    batch_size = 128
 
     def _DScnn(x, rawnet, spectronet):
         c1 = rawnet(x[0])

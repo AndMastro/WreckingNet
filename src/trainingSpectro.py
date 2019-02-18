@@ -10,7 +10,7 @@ from utils import get_class_numbers, get_reduced_set, load, save, get_samples_an
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
 
-BATCH_SIZE = 4096
+BATCH_SIZE = 512
 EPOCHS = 20
 LEARNING_RATE = 0.001
 
