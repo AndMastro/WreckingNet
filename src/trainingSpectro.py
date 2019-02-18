@@ -2,10 +2,12 @@ import sys
 import os
 import random
 import pickle
+import json
 
 from spectronet import SpectroCNN
 from Spectrum import Spectrum
-from utils import get_class_numbers, get_reduced_set, load, save, get_samples_and_labels
+from utils import get_class_numbers, get_reduced_set, load, save
+from DemoPartition import get_samples_and_labels
 
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
@@ -16,100 +18,64 @@ LEARNING_RATE = 0.001
 
 tf.enable_eager_execution()
 
-def read_dataset(src_path):
-    def _read_aux(path, one_hot):
-        ret = []
-        if (not os.path.isdir(path)) and path.endswith('.wav'):
-            val = (Spectrum.compute_specgram_and_delta(path), one_hot)
-            ret.append(val)
-        elif os.path.isdir(path):
-            folders = os.listdir(path)
-            for folder in folders:
-                ret += _read_aux(os.path.join(path, str(folder)), one_hot)
-        return ret
-
-    classes = os.listdir(src_path)
-    class_dict = dict()
-    class_id = 0
-    dataset = []
-    for class_type in classes:
-        print(class_type)
-        new_data = _read_aux(os.path.join(src_path, class_type), class_id)
-        print('class size is: ', len(new_data))
-        dataset = dataset+new_data
-        class_dict[class_type] = class_id
-        class_id = class_id + 1
-
-    return class_dict, dataset
-
-
-def read_dataset_test(src_path, class_dict):
-    def _read_aux(path, one_hot):
-        ret = []
-        if (not os.path.isdir(path)) and path.endswith('.wav'):
-            val = (Spectrum.compute_specgram_and_delta(path), one_hot)
-            ret.append(val)
-        elif os.path.isdir(path):
-            folders = os.listdir(path)
-            for folder in folders:
-                ret += _read_aux(os.path.join(path, str(folder)), one_hot)
-        return ret
-
-    classes = os.listdir(src_path)
-    dataset = []
-    for class_type in classes:
-        class_id = class_dict[class_type]
-        print(class_type)
-        new_data = _read_aux(os.path.join(src_path, class_type), class_id)
-        print('class size is: ', len(new_data))
-        dataset = dataset+new_data
-
-    return class_dict, dataset
-
-
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
     import numpy as np
 
-    model_path = "../models/spectroNet.h5"
+    try:
+        with open('config.json', mode='r', encoding='utf-8') as fin:
+            params = json.load(fin)
+    except Exception as e:
+        print(e)
+        print("No config file, aborting...")
+        sys.exit(0)
 
-    train_dataset_path = '../dataset/data_train_pickle'
-    train_dataset_path_get = '../dataset/segments/training'
+    params['SPECTRUM_MODEL_PATH'] = params.get('SPECTRUM_MODEL_PATH', '../models/'+str(params['AUDIO_MS'])+'/specto.h5')
+    if not os.path.isdir('../models/'+str(params['AUDIO_MS'])):
+        os.makedirs('../models/'+str(params['AUDIO_MS']))
 
-    test_dataset_path = '../dataset/data_test_pickle'
-    test_dataset_path_get = '../dataset/segments/testing'
+    with open('config.json', mode = 'w+', encoding='utf-8') as fout:
+        json.dump(params, fout)
+
+    model_path = params['SPECTRUM_MODEL_PATH']
+    train_dataset_path = params['TRAIN_PICKLE']
+    test_dataset_path = params['TEST_PICKLE']
 
     batch_size = BATCH_SIZE
     epochs = EPOCHS
     learning_rate = LEARNING_RATE
 
+    try:
+        with open(params['DICT_JSON'], mode='r', encoding='utf-8') as fin:
+            class_dict = json.load(fin)
+    except Exception as e:
+        print(e)
+        print("We have lost correpsondances, aborting...")
+        sys.exit(0)
+
     # read train data
     train_set = load(train_dataset_path)
     if train_set is None:
-        print("No Train data")
-        train_set = read_dataset(train_dataset_path_get)
-        save(train_set, train_dataset_path )
-
-    class_train_dict, train_data = train_set
-    random.shuffle(train_data)
-    train_lens = get_class_numbers(train_data, class_train_dict)
-    train_data = get_reduced_set(train_data, train_lens, 'min')
+        print("No Train data, aborting...")
+        sys.exit(0)
 
     # read train data
     test_set = load(test_dataset_path)
     if test_set is None:
-        print("No Test data")
-        test_set = read_dataset_test(test_dataset_path_get, class_train_dict)
-        save(test_set, test_dataset_path)
+        print("No Test data, aborting...")
+        sys.exit(0)
 
-    class_test_dict, test_data = test_set
-    random.shuffle(test_data) #should be here
-    test_lens = get_class_numbers(test_data, class_test_dict)
-    test_data = get_reduced_set(test_data, test_lens, 'min')
+    random.shuffle(train_set)
+    random.shuffle(test_set)  # should be here
 
+    train_lens = get_class_numbers(train_set, class_dict)
+    train_data = get_reduced_set(train_set, train_lens, 'min')
 
-    Xtrain, Ytrain = get_samples_and_labels(train_data)
-    Xtest, Ytest = get_samples_and_labels(test_data)
+    test_lens = get_class_numbers(test_set, class_dict)
+    test_data = get_reduced_set(test_set, test_lens, 'min')
+
+    _, Xtrain, Ytrain = get_samples_and_labels(train_data)
+    _, Xtest, Ytest = get_samples_and_labels(test_data)
 
     print("Train size", len(Ytrain))
     print("Test size", len(Ytest))

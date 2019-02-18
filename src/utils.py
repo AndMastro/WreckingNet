@@ -109,10 +109,10 @@ def get_reduced_set(data, lens, mode='min'):
         max_samples = mode
     
     for d in data:        
-        if taken[d[1]] >= max_samples:
+        if taken[d[2]] >= max_samples:
             continue
         new_data.append(d)
-        taken[d[1]] += 1
+        taken[d[2]] += 1
         
     return new_data
 
@@ -129,7 +129,7 @@ def get_class_numbers(data, classes):
         lens[c] = 0
     
     for d in data:
-        lens[d[1]] += 1
+        lens[d[2]] += 1
         
     return lens
 

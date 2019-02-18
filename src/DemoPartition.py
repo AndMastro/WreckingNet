@@ -162,8 +162,8 @@ if __name__ == "__main__":
         print(e)
         params['DATA_PATH'] = "../dataset/5Classes"
         params['PERCENTAGE'] = 0.7
-        params['AUDIO_MS'] = 950
-        params['HOP_MS'] = 475
+        params['AUDIO_MS'] = 950 #30
+        params['HOP_MS'] = 475 #15
 
         params['SEG_ROOT'] = "../dataset/partitions" + str(int(params['PERCENTAGE'] * 100))
         params['TRAIN_SEG'] = params['SEG_ROOT'] + "/training"
