@@ -33,11 +33,8 @@ def splitDataset(datapath, trainpath, testpath, k=5):
                 form = track.split(".")[-1]     # all track files follow the name.format archetipe
 
     # =============================================================================
-    # Allocate the predefined portions of audio to two different files
+    # Allocate the predefined portions of audio to different files
     # =============================================================================
-    #the arrays contain the train and test for the 5 different folds
-                trainPortions = []
-                testPortions = []
                 testSize = int(len(audio)/k)
                 #testPortions.append(audio[:testSize])
                 #trainPortions.append(audio[testSize:])
