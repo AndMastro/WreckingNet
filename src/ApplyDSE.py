@@ -1,16 +1,16 @@
-import random
 import sys
 import json
+import random
+
+import tensorflow as tf
+import tensorflow.contrib.eager as tfe
 
 from rawnet import rawCNN
 from spectronet import SpectroCNN
 from DSEvidence import DSEvidence
 
-import tensorflow as tf
-import tensorflow.contrib.eager as tfe
-
-from utils import get_class_numbers, get_reduced_set, load
 from DemoPartition import get_samples_and_labels
+from utils import get_class_numbers, get_reduced_set, load
 
 tf.enable_eager_execution()
 
@@ -52,6 +52,7 @@ if __name__ == "__main__":
     test_lens = get_class_numbers(test_set, class_dict)
     test_data = get_reduced_set(test_set, test_lens, 'min')
 
+
     def _DScnn(x, rawnet, spectronet):
         c1 = rawnet(x[0])
         c2 = spectronet(x[1])
@@ -62,6 +63,7 @@ if __name__ == "__main__":
         out = DSEvidence.tf_get_joint_mass(c1, c2)
 
         return out
+
 
     Xtest_raw, Xtest_spec, Ytest = get_samples_and_labels(test_data)
 
@@ -97,11 +99,13 @@ if __name__ == "__main__":
     cnn = lambda x: _DScnn(x, rawnet, spectronet)
     print("Done")
 
+
     def _parse_example(x, y, z):
         x = tf.cast(x, tf.float32)
         y = tf.cast(y, tf.float32)
         z = tf.cast(z, tf.int32)
         return x, y, z
+
 
     test_it = test_it.map(_parse_example)
 
@@ -140,4 +144,3 @@ if __name__ == "__main__":
     print(np.array(true))
 
     sys.exit(0)
-

@@ -1,14 +1,15 @@
-import sys
 import os
-import random
+import sys
 import json
-
-from spectronet import SpectroCNN
-from utils import get_class_numbers, get_reduced_set, load
-from DemoPartition import get_samples_and_labels
+import random
 
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
+
+from spectronet import SpectroCNN
+from DemoPartition import get_samples_and_labels
+from utils import get_class_numbers, get_reduced_set, load
+
 
 BATCH_SIZE = 512
 EPOCHS = 20

@@ -1,14 +1,14 @@
-import random
-import json
-import sys
 import os
+import sys
+import json
+import random
+
+import tensorflow as tf
+import tensorflow.contrib.eager as tfe
 
 from rawnet import rawCNN
 from DemoPartition import get_samples_and_labels
 from utils import get_class_numbers, get_reduced_set, load
-
-import tensorflow as tf
-import tensorflow.contrib.eager as tfe
 
 BATCH_SIZE = 128
 EPOCHS = 20

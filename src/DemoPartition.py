@@ -4,10 +4,10 @@ import shutil
 import random
 import numpy as np
 
-from pydub import AudioSegment
+from utils import save
 from Waver import Waver
 from Spectrum import Spectrum
-from utils import save
+from pydub import AudioSegment
 
 dataPath = "../dataset/5Classes"
 percSplit = 0.7
