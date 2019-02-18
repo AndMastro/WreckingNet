@@ -5,9 +5,14 @@ Created on Tue Feb 12 09:57:06 2019
 @author: Ale
 """
 
-from pydub import AudioSegment
-import pickle
 import os
+import pickle
+import itertools
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+from pydub import AudioSegment
 
 
 def split_datasets(datapath, trainpath, testpath, perc=0.7):
@@ -177,3 +182,61 @@ def get_samples_and_labels(data):
         X.append(x)
         Y.append(y)
     return X, Y
+
+def normalize_cf(cf):
+    """
+    :param cf: np.array
+        confusion matrix to normalize
+    :return: np.array
+        the confusion matrix normalized
+    """
+    return cf.astype('float') / cf.sum(axis=1)[:, np.newaxis]
+
+
+def get_sorted_class_names(class_dict):
+    """
+    :param class_dict: dict
+        dict keeping the mapping class_name-class_id (where class id is an integer or a float)
+    :return: list
+        list of class_names, sorted by class_id
+    """
+    l = []
+    for k in class_dict:
+        l.append((class_dict[k], k))
+    l.sort()
+    return [x[1] for x in l]
+
+
+def plot_confusion_matrix(cm, class_dict,
+                          normalize=True,
+                          title='Confusion matrix',
+                          cmap=plt.cm.Blues):
+    """
+    This function prints and plots the confusion matrix.
+    Normalization can be applied by setting `normalize=True`.
+
+    Code adapted from sklearn documentation
+    """
+
+    if normalize:
+        cm = normalize_cf(cm)
+
+    classes = get_sorted_class_names(class_dict)
+
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, format(cm[i, j], fmt),
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.tight_layout()

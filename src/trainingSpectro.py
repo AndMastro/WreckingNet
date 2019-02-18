@@ -8,10 +8,10 @@ import tensorflow.contrib.eager as tfe
 
 from spectronet import SpectroCNN
 from PickleGenerator import get_samples_and_labels
-from utils import get_class_numbers, get_reduced_set, load
+from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matrix
 
 
-BATCH_SIZE = 512
+BATCH_SIZE = 1024
 EPOCHS = 20
 LEARNING_RATE = 0.001
 
@@ -158,17 +158,8 @@ if __name__ == "__main__":
     cf = tf.confusion_matrix(labels=true, predictions=pred)
     cf = np.array(cf)
 
-    cf_n = cf.astype('float') / cf.sum(axis=1)[:, np.newaxis]
-
     print(cf)
 
-    plt.matshow(cf_n)
-    plt.colorbar()
-    plt.show()
-
-    print(np.array(pred))
-    print(np.array(true))
-
-    cnn.save_weights(model_path)
+    plot_confusion_matrix(cf, class_dict)
 
     sys.exit(0)

@@ -10,7 +10,7 @@ from spectronet import SpectroCNN
 from DSEvidence import DSEvidence
 
 from PickleGenerator import get_samples_and_labels
-from utils import get_class_numbers, get_reduced_set, load
+from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matrix
 
 tf.enable_eager_execution()
 
@@ -134,15 +134,8 @@ if __name__ == "__main__":
     cf = tf.confusion_matrix(labels=true, predictions=pred)
     cf = np.array(cf)
 
-    cf_n = cf.astype('float') / cf.sum(axis=1)[:, np.newaxis]
-
     print(cf)
 
-    plt.matshow(cf_n)
-    plt.colorbar()
-    plt.show()
-
-    print(np.array(pred))
-    print(np.array(true))
+    plot_confusion_matrix(cf, class_dict)
 
     sys.exit(0)
