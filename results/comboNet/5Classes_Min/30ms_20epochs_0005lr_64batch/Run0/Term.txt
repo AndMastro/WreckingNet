@@ -1,0 +1,9 @@
+Test accuracy is 98.60408208664701 %
+=================================
+Generating confusion matrix
+[[17801    20    91    64     5]
+ [   30 17414   190    93   254]
+ [   41    18 17856    59     7]
+ [   27    13   144 17763    34]
+ [   42    46    77     0 17816]]
+Process finished with exit code 0

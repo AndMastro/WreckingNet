@@ -11,9 +11,9 @@ from PickleGenerator import get_samples_and_labels
 from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matrix
 
 
-BATCH_SIZE = 4096
-EPOCHS = 20
-LEARNING_RATE = 0.001
+BATCH_SIZE = 64  # 4096
+EPOCHS = 10
+LEARNING_RATE = 0.00001
 
 tf.enable_eager_execution()
 

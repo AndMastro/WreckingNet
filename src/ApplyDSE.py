@@ -17,7 +17,6 @@ tf.enable_eager_execution()
 BATCH_SIZE = 2048
 
 if __name__ == "__main__":
-    import matplotlib.pyplot as plt
     import numpy as np
 
     try:
