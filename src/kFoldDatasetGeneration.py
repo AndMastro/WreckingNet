@@ -2,6 +2,8 @@ import PickleGenerator
 from pydub import AudioSegment
 import os
 from PickleGenerator import partition_dataset
+from PickleGenerator import gen_dataset
+from utils import save
 
 #function to edit to correctly split the ds for the kFold
 def splitDataset(datapath, trainpath, testpath, k=5):
@@ -67,21 +69,41 @@ def splitDataset(datapath, trainpath, testpath, k=5):
         return
 
 if __name__ == "__main__":
-        
-        print("Splitting datatset for k-fold...")
-        splitDataset("../dataset/5Classes", "../dataset/kFoldDataset/partitions/training", "../dataset/kFoldDataset/partitions/testing", 5)
-        print("Dataset generated.")
 
-        IN_PATH_TRAIN = "../dataset/kFoldDataset/partitions/training"
-        IN_PATH_TEST = "../dataset/kFoldDataset/partitions/testing"
-        OUT_PATH_TRAIN = "../dataset/kFoldDataset/segments/training"
-        OUT_PATH_TEST = "../dataset/kFoldDataset/segments/testing"
-        AUDIO_MS = 950
-        HOP_MS = 475
-        k = 5
+    IN_PATH_TRAIN = "../dataset/kFoldDataset/partitions/training"
+    IN_PATH_TEST = "../dataset/kFoldDataset/partitions/testing"
+    OUT_PATH_TRAIN = "../dataset/kFoldDataset/segments/training"
+    OUT_PATH_TEST = "../dataset/kFoldDataset/segments/testing"
+    PICKLE_PATH = "../dataset/kFoldDataset/pickles/"
+    AUDIO_MS = 30
+    HOP_MS = 15
+    k = 5
+    classes_dict = None
+    
+    print("Splitting datatset for k-fold...")
+    splitDataset("../dataset/5Classes", "../dataset/kFoldDataset/partitions/training", "../dataset/kFoldDataset/partitions/testing", 5)
+    print("Dataset generated.")
 
-        for i in range(0,k):
-            partition_dataset(IN_PATH_TRAIN + str(i), OUT_PATH_TRAIN + str(i), AUDIO_MS, HOP_MS)
-            partition_dataset(IN_PATH_TEST + str(i), OUT_PATH_TEST + str(i), AUDIO_MS, HOP_MS)
+    print("Creating segments of " + str(AUDIO_MS) + "ms")
+    for i in range(0,k):
+        partition_dataset(IN_PATH_TRAIN + str(i), OUT_PATH_TRAIN + str(i), AUDIO_MS, HOP_MS)
+        partition_dataset(IN_PATH_TEST + str(i), OUT_PATH_TEST + str(i), AUDIO_MS, HOP_MS)
+    print("Done.")
+
+    
+    print("Generating pickles...")
+    for i in range(0,k):
+        #train
+        print("Generating pickle for training" + str(i) + "...")
+        classes_dict, train_data = gen_dataset(OUT_PATH_TRAIN + str(i), classes_dict)
+        save(train_data, PICKLE_PATH + "trainPickle" + str(i))
+        print("Saved pickle for training" + str(i))
+        #test
+        print("Generating pickle for testing" + str(i) + "...")
+        classes_dict, test_data = gen_dataset(OUT_PATH_TEST + str(i), classes_dict)
+        save(test_data, PICKLE_PATH + "testPickle" + str(i))
+        print("Saved pickle for testing" + str(i))
+    print("Done. All pickles generated.")
+
 
     
