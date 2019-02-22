@@ -11,8 +11,8 @@ from pydub import AudioSegment
 
 dataPath = "../dataset/5Classes"
 percSplit = 0.7
-audioMS = 3000
-audioHop = 1500
+audioMS = 7000
+audioHop = 3500
 
 
 def partition_track(track_path, out_path, ms, hop=None, get_drop=False):
