@@ -10,7 +10,7 @@ from rawnet import rawCNN
 from PickleGenerator import get_samples_and_labels
 from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matrix
 
-BATCH_SIZE = 32  # 1024
+BATCH_SIZE = 24  # 1024
 EPOCHS = 20
 LEARNING_RATE = 0.0005
 
