@@ -1,1 +1,0 @@
-{"DATA_PATH": "../dataset/5Classes", "PERCENTAGE": 0.7, "AUDIO_MS": 3000, "HOP_MS": 1500, "PICKLES_FOLDER": "../dataset/pickles/ms3000_hop1500", "TRAIN_PICKLE": "../dataset/pickles/ms3000_hop1500/train.p", "TEST_PICKLE": "../dataset/pickles/ms3000_hop1500/test.p", "DICT_JSON": "../dataset/pickles/ms3000_hop1500/classes.json", "RAW_MODEL_PATH": "../models/3000/raw.h5"}
