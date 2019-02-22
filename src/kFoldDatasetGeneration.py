@@ -80,7 +80,7 @@ if __name__ == "__main__":
     k = 5
     classes_dict = None
     
-    '''print("Splitting datatset for k-fold...")
+    print("Splitting datatset for k-fold...")
     splitDataset("../dataset/5Classes", "../dataset/kFoldDataset/partitions/training", "../dataset/kFoldDataset/partitions/testing", 5)
     print("Dataset generated.")
 
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     for i in range(0,k):
         partition_dataset(IN_PATH_TRAIN + str(i), OUT_PATH_TRAIN + str(i), AUDIO_MS, HOP_MS)
         partition_dataset(IN_PATH_TEST + str(i), OUT_PATH_TEST + str(i), AUDIO_MS, HOP_MS)
-    print("Done.")'''
+    print("Done.")
 
     
     print("Generating pickles...")
