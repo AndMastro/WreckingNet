@@ -7,12 +7,11 @@ import tensorflow as tf
 import tensorflow.contrib.eager as tfe
 
 from rawnet import rawCNN
-from spectronet import SpectroCNN
 from PickleGenerator import get_samples_and_labels
 from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matrix
 
 BATCH_SIZE = 64  # 1024
-EPOCHS = 1
+EPOCHS = 20
 LEARNING_RATE = 0.0005
 
 tf.enable_eager_execution()
@@ -22,12 +21,17 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
     import numpy as np
 
-    k_fold_number = 2
+    k_fold_number = 0
     train_dataset_path = "../dataset/kFoldDataset/pickles/trainPickle" + str(k_fold_number)
     test_dataset_path = "../dataset/kFoldDataset/pickles/testPickle" + str(k_fold_number)
-    model_path = "../models/KFold/modelRaw" + str(k_fold_number)
+    model_path = "../models/kFold/modelRaw"
 
-    with open("../dataset/KFoldDataset/pickles/classes.json") as classesFile:
+    if not os.path.isdir(model_path):
+        os.makedirs(model_path)
+
+    model_path = os.path.join(model_path, str(k_fold_number)+'.h5')
+
+    with open("../dataset/kFoldDataset/pickles/classes.json") as classesFile:
         class_dict = json.load(classesFile)
 
     batch_size = BATCH_SIZE
@@ -100,8 +104,6 @@ if __name__ == "__main__":
 
         accTest = tfe.metrics.SparseAccuracy()
         for xb, yb in test_it.batch(batch_size):
-            # print("test")
-            # print(xb, yb)
             ypred = cnn(xb)
             accTest(predictions=ypred, labels=yb)
 
@@ -114,7 +116,6 @@ if __name__ == "__main__":
 
         for xb, yb in train_it.shuffle(1000).batch(batch_size):
             opt.minimize(lambda: loss(cnn, xb, yb))
-
 
     plt.plot(trainAcc)
     plt.show()
@@ -141,6 +142,5 @@ if __name__ == "__main__":
     plot_confusion_matrix(cf, class_dict)
 
     cnn.save_weights(model_path)
-
 
     sys.exit(0)
