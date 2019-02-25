@@ -142,5 +142,4 @@ if __name__ == "__main__":
 
     cnn.save_weights(model_path)
 
-
     sys.exit(0)
