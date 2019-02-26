@@ -21,7 +21,7 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
     import numpy as np
 
-    k_fold_number = 2
+    k_fold_number = 1
     train_dataset_path = "../dataset/kFoldDataset/pickles/trainPickle" + str(k_fold_number)
     test_dataset_path = "../dataset/kFoldDataset/pickles/testPickle" + str(k_fold_number)
     model_path = "../models/kFold/modelRaw"

@@ -1,0 +1,122 @@
+Train size 239815
+Test size 59910
+2019-02-25 21:55:25.746175: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2019-02-25 21:55:25.810400: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:964] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2019-02-25 21:55:25.811060: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1432] Found device 0 with properties: 
+name: GeForce GTX 860M major: 5 minor: 0 memoryClockRate(GHz): 1.0195
+pciBusID: 0000:01:00.0
+totalMemory: 3.95GiB freeMemory: 3.71GiB
+2019-02-25 21:55:25.811073: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1511] Adding visible gpu devices: 0
+2019-02-25 21:55:26.387099: I tensorflow/core/common_runtime/gpu/gpu_device.cc:982] Device interconnect StreamExecutor with strength 1 edge matrix:
+2019-02-25 21:55:26.387122: I tensorflow/core/common_runtime/gpu/gpu_device.cc:988]      0 
+2019-02-25 21:55:26.387128: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1001] 0:   N 
+2019-02-25 21:55:26.387311: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1115] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 3433 MB memory) -> physical GPU (device: 0, name: GeForce GTX 860M, pci bus id: 0000:01:00.0, compute capability: 5.0)
+Allocating tensors
+Done
+Train Loop
+==================================
+Train accuracy at epoch 0 is 20.0 %
+Test accuracy at epoch 0 is 20.0 %
+Loss value at epoch 0 is 1.5847448110580444
+==================================
+==================================
+Train accuracy at epoch 1 is 98.46798573900715 %
+Test accuracy at epoch 1 is 96.01569020196962 %
+Loss value at epoch 1 is 0.017065504565835
+==================================
+==================================
+Train accuracy at epoch 2 is 98.79323645309927 %
+Test accuracy at epoch 2 is 96.13587047237523 %
+Loss value at epoch 2 is 0.013574042357504368
+==================================
+==================================
+Train accuracy at epoch 3 is 99.1093134291016 %
+Test accuracy at epoch 3 is 96.64162911033216 %
+Loss value at epoch 3 is 0.007109358441084623
+==================================
+==================================
+Train accuracy at epoch 4 is 99.32739820278131 %
+Test accuracy at epoch 4 is 96.97045568352529 %
+Loss value at epoch 4 is 0.001967415912076831
+==================================
+==================================
+Train accuracy at epoch 5 is 99.22023226236891 %
+Test accuracy at epoch 5 is 96.70672675680187 %
+Loss value at epoch 5 is 0.005879448261111975
+==================================
+==================================
+Train accuracy at epoch 6 is 99.34282676229593 %
+Test accuracy at epoch 6 is 97.13403438491069 %
+Loss value at epoch 6 is 0.0002512986247893423
+==================================
+==================================
+Train accuracy at epoch 7 is 99.06844859579259 %
+Test accuracy at epoch 7 is 95.99065264563512 %
+Loss value at epoch 7 is 0.049567632377147675
+==================================
+==================================
+Train accuracy at epoch 8 is 99.32948314325625 %
+Test accuracy at epoch 8 is 96.53313303288266 %
+Loss value at epoch 8 is 1.551387322251685e-05
+==================================
+==================================
+Train accuracy at epoch 9 is 99.2289890123637 %
+Test accuracy at epoch 9 is 96.57486229344016 %
+Loss value at epoch 9 is 2.137094270437956e-05
+==================================
+==================================
+Train accuracy at epoch 10 is 99.50044826220211 %
+Test accuracy at epoch 10 is 96.72341846102486 %
+Loss value at epoch 10 is 0.0005087647587060928
+==================================
+==================================
+Train accuracy at epoch 11 is 99.65973771448824 %
+Test accuracy at epoch 11 is 97.1540644299783 %
+Loss value at epoch 11 is 7.85897282185033e-05
+==================================
+==================================
+Train accuracy at epoch 12 is 99.72228592873674 %
+Test accuracy at epoch 12 is 97.27090635953931 %
+Loss value at epoch 12 is 0.00013530657452065498
+==================================
+==================================
+Train accuracy at epoch 13 is 99.74730521443614 %
+Test accuracy at epoch 13 is 97.16908696377901 %
+Loss value at epoch 13 is 6.13075258115714e-07
+==================================
+==================================
+Train accuracy at epoch 14 is 99.66265663115318 %
+Test accuracy at epoch 14 is 96.99048572859289 %
+Loss value at epoch 14 is 9.53644575929502e-06
+==================================
+==================================
+Train accuracy at epoch 15 is 99.79150595250505 %
+Test accuracy at epoch 15 is 97.3560340510766 %
+Loss value at epoch 15 is 1.2124815839342773e-05
+==================================
+==================================
+Train accuracy at epoch 16 is 99.61011613118445 %
+Test accuracy at epoch 16 is 96.78350859622768 %
+Loss value at epoch 16 is 4.087117304152343e-06
+==================================
+==================================
+Train accuracy at epoch 17 is 99.65681879782332 %
+Test accuracy at epoch 17 is 96.82356868636288 %
+Loss value at epoch 17 is 1.7029897492193413e-08
+==================================
+==================================
+Train accuracy at epoch 18 is 99.794007881075 %
+Test accuracy at epoch 18 is 97.44783842430313 %
+Loss value at epoch 18 is 2.5885331069730455e-06
+==================================
+==================================
+Train accuracy at epoch 19 is 99.61970685736922 %
+Test accuracy at epoch 19 is 96.79185444833918 %
+Loss value at epoch 19 is 4.362393883639015e-05
+==================================
+[[11177   250   227    88   240]
+ [   28 11811    97    15    31]
+ [    3    64 11871    24    20]
+ [  103    28   244 11536    71]
+ [   94   101     5     1 11781]]
+Process finished with exit code 0
