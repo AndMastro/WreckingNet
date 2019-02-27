@@ -118,6 +118,7 @@ if __name__ == "__main__":
             batch += 1
 
         ACC.append(accTest.result().numpy())
+        print(sum(ACC)/len(ACC))
 
         print("=================================")
         print("Generating confusion matrix")

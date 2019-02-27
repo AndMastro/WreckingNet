@@ -1,0 +1,65 @@
+Allocating tensors
+(1, 662)
+(1, 60, 2, 2)
+Testing...
+0.972665832290363
+=================================
+Generating confusion matrix
+[[11575   142    46    69   153]
+ [  486 11138    32    77   252]
+ [   24    17 11884    41    19]
+ [    3     1     7 11971     3]
+ [  213    17    13    23 11719]]
+Allocating tensors
+(1, 662)
+(1, 60, 2, 2)
+Testing...
+0.9766851111042868
+=================================
+Generating confusion matrix
+[[11392   118   303    30   139]
+ [    3 11914    51     8     6]
+ [    5    13 11947     9     8]
+ [  117    17   193 11597    58]
+ [   38    36     2     2 11904]]
+Allocating tensors
+(1, 662)
+(1, 60, 2, 2)
+Testing...
+0.9796463748147142
+=================================
+Generating confusion matrix
+[[11948    11     1     8    20]
+ [  259 11573    15     9   132]
+ [   32    23 11841    88     4]
+ [    9     9    17 11942    11]
+ [  118    61     7    31 11771]]
+Allocating tensors
+(1, 662)
+(1, 60, 2, 2)
+Testing...
+D:\Repositories\WreckingNet\src\DSEvidence.py:33: RuntimeWarning: invalid value encountered in true_divide
+  sums.append((p1[i]*p2[i])/K)
+D:\Repositories\WreckingNet\src\DSEvidence.py:33: RuntimeWarning: divide by zero encountered in true_divide
+  sums.append((p1[i]*p2[i])/K)
+0.9803862292372354
+=================================
+Generating confusion matrix
+[[11920    15    11    29     6]
+ [   58 11892    21     0    10]
+ [  113     8 11708    64    88]
+ [  208    56   279 11408    30]
+ [   17    22     1     6 11935]]
+Allocating tensors
+(1, 662)
+(1, 60, 2, 2)
+Testing...
+0.9827165948069141
+=================================
+Generating confusion matrix
+[[11879    37     1    10    55]
+ [   98 11808    22    21    33]
+ [    7     0 11967     8     0]
+ [   34     8    25 11903    12]
+ [   62    22     2    20 11876]]
+0.9827165948069141
