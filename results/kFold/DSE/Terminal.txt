@@ -15,6 +15,9 @@ Allocating tensors
 (1, 60, 2, 2)
 Testing...
 0.9766851111042868
+Precision: 0.9729525901062972
+Recall: 0.972665832290363
+F1: 0.9728091900662201
 =================================
 Generating confusion matrix
 [[11392   118   303    30   139]
@@ -27,6 +30,9 @@ Allocating tensors
 (1, 60, 2, 2)
 Testing...
 0.9796463748147142
+Precision: 0.9586728421272085
+Recall: 0.922027524445786
+F1: 0.9399931675353865
 =================================
 Generating confusion matrix
 [[11948    11     1     8    20]
@@ -43,6 +49,9 @@ D:\Repositories\WreckingNet\src\DSEvidence.py:33: RuntimeWarning: invalid value 
 D:\Repositories\WreckingNet\src\DSEvidence.py:33: RuntimeWarning: divide by zero encountered in true_divide
   sums.append((p1[i]*p2[i])/K)
 0.9803862292372354
+Precision: 0.9857350872486819
+Recall: 0.9855689022355689
+F1: 0.9856519877372548
 =================================
 Generating confusion matrix
 [[11920    15    11    29     6]
@@ -55,6 +64,9 @@ Allocating tensors
 (1, 60, 2, 2)
 Testing...
 0.9827165948069141
+Precision: 0.9827524202534281
+Recall: 0.9826057925047993
+F1: 0.9826791009094501
 =================================
 Generating confusion matrix
 [[11879    37     1    10    55]
@@ -63,3 +75,11 @@ Generating confusion matrix
  [   34     8    25 11903    12]
  [   62    22     2    20 11876]]
 0.9827165948069141
+Precision: 0.9920551461357447
+Recall: 0.9920380570856284
+F1: 0.9920466015370923
+
+K fold metrics:
+Precision: 0.9784336171742721
+Recall: 0.9709812217124292
+F1: 0.9746360095570807
