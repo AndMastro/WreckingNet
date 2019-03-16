@@ -31,7 +31,7 @@ class DSEvidence:
         for i in range(n):
             #print(p1[i], p2[i])
             sums.append((p1[i]*p2[i])/K)
-        
+                    
         res = np.array([x/sum(sums) for x in sums], dtype=np.float32)
 
         res.reshape(1, -1)
