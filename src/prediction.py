@@ -113,7 +113,7 @@ def predict(segments):
 #         else:
 #             classes[ypred] = 1
 # =============================================================================
-        print(ypred)
+        print("ypred", ypred)
             
         accTest(predictions=ypred, labels=yb)
         to_append = [tf.argmax(x) for x in ypred]
@@ -153,8 +153,12 @@ if __name__ == "__main__":
         class_dict = json.load(classesFile)
 
     test_lens = get_class_numbers(test_set, class_dict)
-    test_data = get_reduced_set(test_set, test_lens, 'min')
+    test_data = get_reduced_set(test_set, test_lens, 'min')    
     
-    predict([test_data[0][0],test_data[0][1]])
+    rawdata, specdata, _ = get_samples_and_labels(test_data)   
+    
+    print(len(rawdata), len(specdata))
+    
+    predict([rawdata,specdata])
 
     
