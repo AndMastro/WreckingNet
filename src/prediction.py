@@ -28,7 +28,8 @@ from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matri
 DATADIR     = r"..\dataset\5Classes"
 CLASSDIR    = r"..\dataset\kFoldDataset\pickles"
 CLASSFILE   = "classes.json"
-MODELSDIR   = r"..\models\30"
+MODELSDIR   = r"..\models\kFold\modelSpectro"
+MODELRDIR   = r"..\models\kFold\modelRaw"
 
 PICKLEDIC   = r"..\dataset\kFoldDataset\pickles"
 PICKLENAME  = "testPickle4"
@@ -87,9 +88,11 @@ def predict(segments):
         _ = rawnet(x)
         _ = spectronet(z)
         break
-
-    rawnet.load_weights(os.path.join(MODELSDIR, 'raw.h5'))
-    spectronet.load_weights(os.path.join(MODELSDIR, 'spectro.h5'))
+    
+    print(os.path.exists(MODELSDIR))
+    
+    rawnet.load_weights(os.path.join(MODELRDIR, '4.h5'))
+    spectronet.load_weights(os.path.join(MODELSDIR, '4.h5'))   
 
     cnn = lambda x: _DScnn(x, rawnet, spectronet)
 
@@ -103,28 +106,55 @@ def predict(segments):
     classes = {}
     
     batch = 0
-    accTest = tfe.metrics.SparseAccuracy()
-    step = 0
+    
     for x, z, yb in test_it.batch(1):
-        ypred = cnn((x, z))
-# =============================================================================
-#         if ypred in classes:
-#             classes[ypred] += 1
-#         else:
-#             classes[ypred] = 1
-# =============================================================================
-        print("ypred", ypred)
-            
-        accTest(predictions=ypred, labels=yb)
+        ypred = cnn((x, z))         
         to_append = [tf.argmax(x) for x in ypred]
-        pred = pred + to_append
-        true_append = [x for x in yb]
-        true = true + true_append
-        print("Batch num: " + str(batch), end='\r', flush=True)
+        to_append = to_append[0].numpy()
+        
+        if to_append in classes:
+            classes[to_append] += 1
+        else:
+            classes[to_append] = 1
+            
+        if batch%1000 == 0:
+            print("Batch num: " + str(batch), end='\r', flush=True)
+            
         batch += 1
+    
+    print(classes)
+    
+    audio_class = -1
+    audio_max = 0
+    
+    for c in classes:
+        if classes[c] > audio_max:
+            audio_class = c
+            audio_max = classes[c]
+    
+    print("Audio class:", audio_class)
 
     
+def get_data():
+    
+    # read test data
+    test_set = load(os.path.join(PICKLEDIC, PICKLENAME))
+    if test_set is None:
+        print("No Test data, aborting...")
+        sys.exit(0)
 
+    random.shuffle(test_set)  # should be here
+    
+    with open("../dataset/kFoldDataset/pickles/classes.json") as classesFile:
+        class_dict = json.load(classesFile)
+
+    test_lens = get_class_numbers(test_set, class_dict)
+    test_data = get_reduced_set(test_set, test_lens, 'min')    
+    
+    rawdata, specdata, _ = get_samples_and_labels(test_data)  
+    
+    return rawdata, specdata
+    
 
 if __name__ == "__main__":
         
@@ -140,24 +170,8 @@ if __name__ == "__main__":
 #     wave = Waver.get_waveform(audiopath)
 #     specgram = Spectrum.compute_specgram_and_delta(audiopath)
 # =============================================================================
-
-    # read test data
-    test_set = load(os.path.join(PICKLEDIC, PICKLENAME))
-    if test_set is None:
-        print("No Test data, aborting...")
-        sys.exit(0)
-
-    random.shuffle(test_set)  # should be here
     
-    with open("../dataset/kFoldDataset/pickles/classes.json") as classesFile:
-        class_dict = json.load(classesFile)
-
-    test_lens = get_class_numbers(test_set, class_dict)
-    test_data = get_reduced_set(test_set, test_lens, 'min')    
-    
-    rawdata, specdata, _ = get_samples_and_labels(test_data)   
-    
-    print(len(rawdata), len(specdata))
+    rawdata, specdata = get_data()
     
     predict([rawdata,specdata])
 
