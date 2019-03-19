@@ -27,9 +27,9 @@ from PickleGenerator import get_samples_and_labels
 from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matrix
 
 
-CLASSFILE   = "../dataset/kFoldDataset/pickles/classes.json"
-MODELRDIR   = r"../models/kFold/modelRaw/4.h5"
-MODELSDIR   = r"../models/kFold/modelSpectro/4.h5"
+CLASSFILE   = "../dataset/pickles/ms30_hop15/classes.json"
+MODELRDIR   = r"../models/30/raw.h5"
+MODELSDIR   = r"../models/30/spectro.h5"
 
 
 CLASS = 0
@@ -173,8 +173,9 @@ if __name__ == "__main__":
 
     shutil.rmtree(tmp_segments)
 
-    classes = json.load(CLASSFILE)
+    with open(CLASSFILE, 'r', encoding='utf-8') as fin:
+        classes = json.load(fin)
     x = predict([raw, specs])
     for k in classes:
         if classes[k] == x:
-            print("Class is:", k)
+            print("Predicted class is:", k)
