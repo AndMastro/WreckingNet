@@ -9,30 +9,28 @@ import json
 import os
 import sys
 import random
+import shutil
 
 import tensorflow as tf
 import numpy as np
 import tensorflow.contrib.eager as tfe
 
+import PickleGenerator
 from rawnet import rawCNN
 from spectronet import SpectroCNN
 from DSEvidence import DSEvidence
 
-# =============================================================================
-# from Spectrum import Spectrum
-# from Waver import Waver
-# =============================================================================
+from Spectrum import Spectrum
+from Waver import Waver
+
 from PickleGenerator import get_samples_and_labels
 from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matrix
 
-DATADIR     = r"..\dataset\5Classes"
-CLASSDIR    = r"..\dataset\kFoldDataset\pickles"
-CLASSFILE   = "classes.json"
-MODELSDIR   = r"..\models\kFold\modelSpectro"
-MODELRDIR   = r"..\models\kFold\modelRaw"
 
-PICKLEDIC   = r"..\dataset\kFoldDataset\pickles"
-PICKLENAME  = "testPickle4"
+CLASSFILE   = "../dataset/kFoldDataset/pickles/classes.json"
+MODELRDIR   = r"../models/kFold/modelRaw/4.h5"
+MODELSDIR   = r"../models/kFold/modelSpectro/4.h5"
+
 
 CLASS = 0
 BATCH = 1
@@ -91,8 +89,8 @@ def predict(segments):
     
     print(os.path.exists(MODELSDIR))
     
-    rawnet.load_weights(os.path.join(MODELRDIR, '4.h5'))
-    spectronet.load_weights(os.path.join(MODELSDIR, '4.h5'))   
+    rawnet.load_weights(MODELRDIR)
+    spectronet.load_weights(MODELSDIR)
 
     cnn = lambda x: _DScnn(x, rawnet, spectronet)
 
@@ -134,8 +132,9 @@ def predict(segments):
     
     print("Audio class:", audio_class)
 
+    return audio_class
     
-def get_data():
+def get_data(PICKLEDIC, PICKLENAME):
     
     # read test data
     test_set = load(os.path.join(PICKLEDIC, PICKLENAME))
@@ -157,22 +156,25 @@ def get_data():
     
 
 if __name__ == "__main__":
-        
-    dirpath = os.path.join(CLASSDIR, CLASSFILE)    
-    classes = get_classes(dirpath)
-    class_used = list(classes.keys())[CLASS]
-    classpath = os.path.join(DATADIR, class_used)
-    
-    audioname = os.listdir(classpath)[min(len(os.listdir(classpath)), AUDIO)]    
-    audiopath = os.path.join(classpath, audioname)
-      
-# =============================================================================
-#     wave = Waver.get_waveform(audiopath)
-#     specgram = Spectrum.compute_specgram_and_delta(audiopath)
-# =============================================================================
-    
-    rawdata, specdata = get_data()
-    
-    predict([rawdata,specdata])
 
-    
+    audiopath = '../dataset/predict/ConcreteMixer_onsite.wav'
+    tmp_segments = '../dataset/predict/chuncks'
+
+    PickleGenerator.partition_track(audiopath, tmp_segments, 30, 15)
+
+    raw = []
+    specs = []
+    # generate spectrum and raw data
+    for file in os.listdir(tmp_segments):
+        path = os.path.join(tmp_segments, file)
+        val = (Waver.get_waveform(path), Spectrum.compute_specgram_and_delta(path))
+        raw.append(val[0])
+        specs.append(val[1])
+
+    shutil.rmtree(tmp_segments)
+
+    classes = json.load(CLASSFILE)
+    x = predict([raw, specs])
+    for k in classes:
+        if classes[k] == x:
+            print("Class is:", k)
