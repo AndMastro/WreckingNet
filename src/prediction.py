@@ -104,6 +104,8 @@ def predict(segments):
     classes = {}
     
     batch = 0
+    audio_class = -1
+    audio_max = 0
     
     for x, z, yb in test_it.batch(1):
         ypred = cnn((x, z))         
@@ -114,6 +116,13 @@ def predict(segments):
             classes[to_append] += 1
         else:
             classes[to_append] = 1
+        
+        cur_val = classes[to_append]
+        
+        if cur_val > audio_max:
+            audio_max = cur_val
+        
+        audio_class = to_append
             
         if batch%1000 == 0:
             print("Batch num: " + str(batch), end='\r', flush=True)
@@ -122,13 +131,12 @@ def predict(segments):
     
     print(classes)
     
-    audio_class = -1
-    audio_max = 0
-    
-    for c in classes:
-        if classes[c] > audio_max:
-            audio_class = c
-            audio_max = classes[c]
+# =============================================================================
+#     for c in classes:
+#         if classes[c] > audio_max:
+#             audio_class = c
+#             audio_max = classes[c]
+# =============================================================================
     
     print("Audio class:", audio_class)
 
