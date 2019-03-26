@@ -120,3 +120,6 @@ Loss value at epoch 19 is 4.362393883639015e-05
  [  103    28   244 11536    71]
  [   94   101     5     1 11781]]
 Process finished with exit code 0
+Precision: 0.971973124444364
+Recall: 0.971653713619148
+F1: 0.9718133927861636
