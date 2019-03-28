@@ -44,14 +44,22 @@ class SpectroCNN(tf.keras.Model):
 
     def call(self, x, training=False):
         batch_size = x.shape[0]
+        print("Spectronet - input", x.shape)
         x = self.conv1(x)
+        print("Spectronet - conv1", x.shape)
         x = self.conv2(x)
+        print("Spectronet - conv2", x.shape)
         x = self.conv3(x)
+        print("Spectronet - conv3", x.shape)
         x = self.conv4(x)
+        print("Spectronet - conv4", x.shape)
         x = self.conv5(x)
+        print("Spectronet - conv5", x.shape)
         x = self.dense(tf.reshape(x, [batch_size, -1]))  # this is not so correct
+        print("Spectronet - dense", x.shape)
         #x = self.dense(tf.reshape(x, [-1, 49152]))
         x = self.dropout(x, training=training)
+        print("Spectronet - dropour", x.shape)
 
         return self.logits(x)
 
