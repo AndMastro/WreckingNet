@@ -12,7 +12,7 @@ from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matri
 
 
 BATCH_SIZE = 64  # 4096
-EPOCHS = 10
+EPOCHS = 20
 LEARNING_RATE = 0.00001
 
 tf.enable_eager_execution()
@@ -162,6 +162,6 @@ if __name__ == "__main__":
 
     plot_confusion_matrix(cf, class_dict)
 
-    #cnn.save_weights(model_path)
+    cnn.save_weights(model_path)
 
     sys.exit(0)
