@@ -139,10 +139,19 @@ if __name__ == "__main__":
             opt.minimize(lambda: loss(cnn, xb, yb))
 
     plt.plot(trainAcc)
+    plt.title('Raw Train Accuracy')
+    plt.xlabel('epochs')
+    plt.ylabel('accuracy')
     plt.show()
     plt.plot(testAcc)
+    plt.title('Raw Test Accuracy')
+    plt.xlabel('epochs')
+    plt.ylabel('accuracy')
     plt.show()
     plt.plot(lossValues)
+    plt.title('Raw Loss Value')
+    plt.xlabel('iterations')
+    plt.ylabel('loss')
     plt.show()
 
     pred = []

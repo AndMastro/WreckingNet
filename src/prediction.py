@@ -96,9 +96,6 @@ def predict(segments):
 
     test_it = test_it.map(_parse_example)
 
-    pred = []
-    true = []
-
     print("Testing...")
     
     classes = {}
@@ -121,8 +118,7 @@ def predict(segments):
         
         if cur_val > audio_max:
             audio_max = cur_val
-        
-        audio_class = to_append
+            audio_class = to_append
             
         if batch%1000 == 0:
             print("Batch num: " + str(batch), end='\r', flush=True)
@@ -165,7 +161,7 @@ def get_data(PICKLEDIC, PICKLENAME):
 
 if __name__ == "__main__":
 
-    audiopath = '../dataset/predict/ConcreteMixer_onsite.wav'
+    audiopath = '../dataset/predict/ConcreteMixer_Real.wav'
     tmp_segments = '../dataset/predict/chuncks'
 
     PickleGenerator.partition_track(audiopath, tmp_segments, 30, 15)
