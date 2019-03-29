@@ -162,6 +162,6 @@ if __name__ == "__main__":
 
     plot_confusion_matrix(cf, class_dict)
 
-    #cnn.save_weights(model_path)
+    cnn.save_weights(model_path)
 
     sys.exit(0)
