@@ -101,6 +101,7 @@ if __name__ == "__main__":
 
     cnn = SpectroCNN()
 
+    
 
     def loss(net, x, y):
         return tf.losses.sparse_softmax_cross_entropy(logits=net(x, training=True), labels=y)
@@ -137,6 +138,8 @@ if __name__ == "__main__":
 
         for xb, yb in train_it.shuffle(1000).batch(batch_size):
             opt.minimize(lambda: loss(cnn, xb, yb))
+
+        cnn.summary()
 
     plt.plot(trainAcc)
     plt.show()
