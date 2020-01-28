@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 #---------------------------
 # specgram
 
-path = '/home/yanuba/Repos/WreckingNet/dataset/predict/ConcreteMixer_onsite.wav'
+path = '~/Repos/WreckingNet/dataset/predict/ConcreteMixer_onsite.wav'
 size = 440
 
 x = Spectrum.compute_specgram_and_delta(path)
