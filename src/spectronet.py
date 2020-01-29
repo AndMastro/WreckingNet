@@ -45,7 +45,7 @@ class SpectroCNN(tf.keras.Model):
         self.dropout = tf.layers.Dropout(0.3)  # to be improved
 
         # self.logits = tf.layers.Dense(units=4, activation=tf.nn.softmax)
-        self.logits = tf.layers.Dense(units=5)
+        self.logits = tf.layers.Dense(units=9) #number of classes
 
     def call(self, x, training=False):
         batch_size = x.shape[0]

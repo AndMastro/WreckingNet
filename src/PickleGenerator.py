@@ -9,7 +9,7 @@ from Waver import Waver
 from Spectrum import Spectrum
 from pydub import AudioSegment
 
-dataPath = "../dataset/5Classes"
+dataPath = "../dataset/LSUAudioData/9Classes"
 percSplit = 0.7
 audioMS = 30
 audioHop = 15
@@ -181,7 +181,7 @@ def generate_config(config_path='config.json', dataset_path=dataPath, percentage
         params['AUDIO_MS'] = audio_ms
         params['HOP_MS'] = audio_hop
 
-    params['PICKLES_FOLDER'] = "../dataset/pickles/ms" + str(params['AUDIO_MS']) + "_hop" + str(params['HOP_MS'])
+    params['PICKLES_FOLDER'] = "../dataset/LSUAudioData/pickles/ms" + str(params['AUDIO_MS']) + "_hop" + str(params['HOP_MS'])
     params['TRAIN_PICKLE'] = params['PICKLES_FOLDER'] + "/train.p"
     params['TEST_PICKLE'] = params['PICKLES_FOLDER'] + "/test.p"
     params['DICT_JSON'] = params['PICKLES_FOLDER'] + "/classes.json"

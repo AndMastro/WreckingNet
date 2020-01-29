@@ -13,7 +13,7 @@ from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matri
 
 BATCH_SIZE = 64  # 4096
 EPOCHS = 20
-LEARNING_RATE = 0.00001
+LEARNING_RATE = 0.0005 #0.00001
 
 tf.enable_eager_execution()
 
@@ -29,9 +29,9 @@ if __name__ == "__main__":
         print("No config file, aborting...")
         sys.exit(0)
 
-    params['SPECTRUM_MODEL_PATH'] = params.get('SPECTRUM_MODEL_PATH', '../models/'+str(params['AUDIO_MS'])+'/spectro.h5')
-    if not os.path.isdir('../models/'+str(params['AUDIO_MS'])):
-        os.makedirs('../models/'+str(params['AUDIO_MS']))
+    params['SPECTRUM_MODEL_PATH'] = params.get('SPECTRUM_MODEL_PATH', '../models/LSUAudioData/'+str(params['AUDIO_MS'])+'/spectro.h5')
+    if not os.path.isdir('../models/LSUAudioData/'+str(params['AUDIO_MS'])):
+        os.makedirs('../models/LSUAudioData/'+str(params['AUDIO_MS']))
 
     with open('config.json', mode = 'w+', encoding='utf-8') as fout:
         json.dump(params, fout)
@@ -139,7 +139,7 @@ if __name__ == "__main__":
         for xb, yb in train_it.shuffle(1000).batch(batch_size):
             opt.minimize(lambda: loss(cnn, xb, yb))
 
-        cnn.summary()
+        #cnn.summary()
 
     plt.plot(trainAcc)
     plt.show()
