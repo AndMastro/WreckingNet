@@ -12,7 +12,7 @@ from utils import get_class_numbers, get_reduced_set, load, plot_confusion_matri
 
 
 BATCH_SIZE = 64  # 4096
-EPOCHS = 20
+EPOCHS = 100
 LEARNING_RATE = 0.0005 #0.00001
 
 tf.enable_eager_execution()
